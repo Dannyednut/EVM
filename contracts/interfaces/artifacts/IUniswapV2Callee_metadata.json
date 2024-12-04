@@ -1,0 +1,74 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "uniswapV2Call",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IUniswapV2Callee.sol": "IUniswapV2Callee"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IUniswapV2Callee.sol": {
+			"keccak256": "0x50f3d97a0b29945b5ff5cdb1d4e693d6040a4a9c830d31784bfad92c80311306",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://a0c082a709389e14509f7b4b5b516c348fb016a06928e56078ad54fe6fbcd6c6",
+				"dweb:/ipfs/QmR7mXRPyucBUVoKTGVpQZXQAnbQrpQEgyC5H3f6gihWuc"
+			]
+		}
+	},
+	"version": 1
+}

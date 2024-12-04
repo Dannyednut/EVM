@@ -1,0 +1,55 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"author": "dYdX Library that defines a fixed-point number with 18 decimal places.",
+			"kind": "dev",
+			"methods": {},
+			"title": "Decimal",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/libraries/Decimal.sol": "Decimal"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/libraries/Decimal.sol": {
+			"keccak256": "0x3503a5e3256fe6cb465ab91a234b7709ea8ab9a71440d0e92fb7b1caec7b9d11",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://4f3b12d17b56efc5c1430dba9db304bf3d99d521e18ae681a1b7fb8b950d75ea",
+				"dweb:/ipfs/QmcfSWKwyLxcu48t2pu3Qi6iMSVKZtUviDjbgcuJh9tEnz"
+			]
+		},
+		"contracts/libraries/SafeMathCopy.sol": {
+			"keccak256": "0x571727771e49df69639abedfcd6d4219ab7c3fcb580558e076a3f00cf05463bc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d4dd44953742c6f9af5594153bc2c97f122a2c644fd48d3c4bcbef642984bf98",
+				"dweb:/ipfs/QmV7mzbrCx41xvmyGZSLjnKf5EHmYH3i5qaxjHWD2J5Y7a"
+			]
+		}
+	},
+	"version": 1
+}

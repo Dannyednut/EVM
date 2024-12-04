@@ -1,0 +1,132 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentAllowance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requestedDecrease",
+						"type": "uint256"
+					}
+				],
+				"name": "SafeERC20FailedDecreaseAllowance",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "SafeERC20FailedOperation",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"details": "Wrappers around ERC-20 operations that throw on failure (when the token contract returns false). Tokens that return no value (and instead revert or throw on failure) are also supported, non-reverting calls are assumed to be successful. To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract, which allows you to call the safe operations as `token.safeTransfer(...)`, etc.",
+			"errors": {
+				"SafeERC20FailedDecreaseAllowance(address,uint256,uint256)": [
+					{
+						"details": "Indicates a failed `decreaseAllowance` request."
+					}
+				],
+				"SafeERC20FailedOperation(address)": [
+					{
+						"details": "An operation with an ERC-20 token failed."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {},
+			"title": "SafeERC20",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			".deps/npm/@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "SafeERC20"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		".deps/npm/@openzeppelin/contracts/interfaces/IERC1363.sol": {
+			"keccak256": "0xd711545af3ceb8a113e3db55d3f62e20594a0890c9df6a6b7ac791979b022169",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b20317ff0cc154e6b1549d401a44cee225474b24df70ab612181a9aa54236f9e",
+				"dweb:/ipfs/QmP3hTeKWLKJ1S2yQ7riBxt6jgwGZZxEHDYzZ6HQ7dMP69"
+			]
+		},
+		".deps/npm/@openzeppelin/contracts/interfaces/IERC165.sol": {
+			"keccak256": "0x4a01e77adcb9cf9dc674dae52e013b614fd6682fcf26d691a5ad76f658d11554",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://553f27bb7c5c028ac3bef5992aca41f7d94be8e1145d91389e71d7f931fc6a28",
+				"dweb:/ipfs/QmPSpZQhGpyt3JNA3bd4jjZ9XydaJpgeoQi9VfWP9yTorV"
+			]
+		},
+		".deps/npm/@openzeppelin/contracts/interfaces/IERC20.sol": {
+			"keccak256": "0xf0ad05570d7217afe52ccfe2b003cdd9c19b807118ef7f390a40c5ee12340fa1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6579ef76382efccf013d2595d0d7e4601a6b02ec32c5cdf70b993371daf72d86",
+				"dweb:/ipfs/QmVz79HJdfkpvidbwLZxxdJsazYNqbVhbNTDDgZotW7BmM"
+			]
+		},
+		".deps/npm/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db",
+				"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9"
+			]
+		},
+		".deps/npm/@openzeppelin/contracts/token/ERC20/SafeERC20.sol": {
+			"keccak256": "0x117e90c697941bac25f767374b16c0005717a2fc3d3e6faf29dc5880937b0fa0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://757f9773ad21794799283971a8fd7d3f5051eb1dfe450223a4ff19281ba8f6f1",
+				"dweb:/ipfs/QmayxKBheEurmUVGh6uvc33CF8rqYQQbF4GweudknX9waZ"
+			]
+		},
+		".deps/npm/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xaba1d3b9d5e824baede3ad0be9c42ec8d34cee71df8ae63f70aefd5bbbab09de",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://85c9cb563f933c642a2e0037a39f6962f0dc1a4811e3a6d130cb7317bacf1bd1",
+				"dweb:/ipfs/QmXUoks1MtXQ28bnh4pSGnwW1ewNyyFyxifzydyWgi66Sf"
+			]
+		}
+	},
+	"version": 1
+}

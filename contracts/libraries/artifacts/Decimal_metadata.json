@@ -35,11 +35,10 @@
 	},
 	"sources": {
 		"contracts/libraries/Decimal.sol": {
-			"keccak256": "0x3503a5e3256fe6cb465ab91a234b7709ea8ab9a71440d0e92fb7b1caec7b9d11",
-			"license": "UNLICENSED",
+			"keccak256": "0x2107d9c3e451b98bc091c6f97811717a4b32ad9dd47770b9a02687c0f002c5a3",
 			"urls": [
-				"bzz-raw://4f3b12d17b56efc5c1430dba9db304bf3d99d521e18ae681a1b7fb8b950d75ea",
-				"dweb:/ipfs/QmcfSWKwyLxcu48t2pu3Qi6iMSVKZtUviDjbgcuJh9tEnz"
+				"bzz-raw://85a8f2537ee6a31bfae65c992b75bc48a04cd26317ef70ebb9335cdb020f6733",
+				"dweb:/ipfs/Qma9wNM64MUenCMxDCZvccP17MLcHcw1Deh18AP3vzBq1W"
 			]
 		},
 		"contracts/libraries/SafeMathCopy.sol": {

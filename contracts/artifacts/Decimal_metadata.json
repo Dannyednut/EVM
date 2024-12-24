@@ -1,0 +1,47 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"author": "dYdX Library that defines a fixed-point number with 18 decimal places.",
+			"kind": "dev",
+			"methods": {},
+			"title": "Decimal",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/flash_flattened.sol": "Decimal"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/flash_flattened.sol": {
+			"keccak256": "0xd9246c4c4d37be0b0bcb4834f8833fe2f1ea700873f03244c448ab9ba1e4ac28",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://14ad90194eac2b7765f50d884e568884a23297d055bfdb0345751bd9749fcc25",
+				"dweb:/ipfs/QmfE19a4GRjW92aGZA3kuRrpXNaeV22cDyfx3L5fypCK74"
+			]
+		}
+	},
+	"version": 1
+}

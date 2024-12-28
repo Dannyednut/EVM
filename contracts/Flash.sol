@@ -123,7 +123,6 @@ contract FlashBot is Ownable {
 
     function isbaseTokenSmaller(address pool0, address pool1)
         internal
-        
         returns (
             bool baseSmaller,
             address baseToken,
@@ -342,7 +341,7 @@ contract FlashBot is Ownable {
     function calcMaxBorrowableAmount(OrderedReserves memory reserves) internal pure returns (uint256 amount) {
         // Choose a smaller reserve as the base for calculation, considering which pool has more liquidity in its respective asset.
         
-        uint256 min = MyMathLibrary.min((reserves.a1 * reserves.b2), (reserves.b1 * reserves.a2));
+        int256 min = MyMathLibrary.min(int256(reserves.a1 * reserves.b2), int256(reserves.b1 * reserves.a2));
 
         if(min <= 0){
             return 0;
@@ -373,12 +372,12 @@ contract FlashBot is Ownable {
             d = 1e10;
         }
 
-        (uint256 a1, uint256 a2, uint256 b1, uint256 b2) =
-            ((reserves.a1 / d), (reserves.a2 / d), (reserves.b1 / d), (reserves.b2 / d)); 
+        (int256 a1, int256 a2, int256 b1, int256 b2) =
+            (int256(reserves.a1 / d), int256(reserves.a2 / d), int256(reserves.b1 / d), int256(reserves.b2 / d)); 
         // Use a different approach based on the pools' reserve ratios to determine borrowable amount
         require(a2 < b2, 'Wrong input order');
         
-        uint256 max = MyMathLibrary.max(MyMathLibrary.abs((a1 * b2) - (b1 * a2)),MyMathLibrary.abs( ((a1 * b2))));
+        int256 max = MyMathLibrary.max(MyMathLibrary.abs((a1 * b2) - (b1 * a2)),MyMathLibrary.abs( ((a1 * b2))));
             
             if(max == 0){
                 return 0;
@@ -402,7 +401,7 @@ contract FlashBot is Ownable {
         int256 m = b**2 - 4 * a * c;
         // m < 0 leads to complex number
         
-        require(m > 0, "Complex number");
+        require(m > 0, 'Complex number');
 
         int256 sqrtM = int256(MyMathLibrary.sqrt(uint256(m)));
         x1 = (-b + sqrtM) / (2 * a);

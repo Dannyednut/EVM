@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.26+commit.8a97fa7a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -20,7 +20,7 @@
 		"compilationTarget": {
 			"contracts/libraries/Math.sol": "MyMathLibrary"
 		},
-		"evmVersion": "shanghai",
+		"evmVersion": "cancun",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -33,11 +33,11 @@
 	},
 	"sources": {
 		"contracts/libraries/Math.sol": {
-			"keccak256": "0xa12c9abd211a668f7ff124983494e214fd25b345207698db63e189868354acb3",
+			"keccak256": "0xcd5083c46e2c39df5a55242f0e0f8bd03b0354ead8852ebd38ad9d13278f8860",
 			"license": "Unlicense",
 			"urls": [
-				"bzz-raw://d74e5ae6806a7296ba0d4ec71cd2b84ff52b0652b9e6eb568de565a2101228c3",
-				"dweb:/ipfs/QmYLwjERpMGBdeX6FhVsbUjbrVC6HYU1gawg2Fe2F5YhEt"
+				"bzz-raw://444501db0276ccaa6c705502fd7f78ed94da350f2cb86a774036aa1428b21950",
+				"dweb:/ipfs/Qmb3Z56hz5dmeTrD97GzBe2F3cpb63Z77m3vZ87BogTdhK"
 			]
 		}
 	},

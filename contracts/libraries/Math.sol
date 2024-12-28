@@ -1,22 +1,22 @@
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.0;
 
 library MyMathLibrary {
-    function max(uint256 x, uint256 y) internal pure returns (uint256) {
+    function max(int256 x, int256 y) internal pure returns (int256) {
         return x > y ? x : y;
     }
 
-    function min(uint256 a1,uint256 b2)internal pure  returns (uint256){
+    function min(int256 a1,int256 b2)internal pure  returns (int256){
          require(a1 <=b2,"a is bigger than b");
           if(b2==0)
            {require(false, "Can't divide by zero"); revert();}
         return a1 < b2 ? a1 : b2;
     }
 
-   function abs(uint256 x) internal pure returns (uint256){
+   function abs(int256 x) internal pure returns (int256){
        require(x >= 0);
-        return x == uint256(0) ? uint256(0):x;
+        return x == int256(0) ? int256(0):x;
 
     }
 

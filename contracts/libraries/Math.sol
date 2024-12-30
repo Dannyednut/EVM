@@ -8,9 +8,6 @@ library MyMathLibrary {
     }
 
     function min(int256 a1,int256 b2)internal pure  returns (int256){
-         require(a1 <=b2,"a is bigger than b");
-          if(b2==0)
-           {require(false, "Can't divide by zero"); revert();}
         return a1 < b2 ? a1 : b2;
     }
 

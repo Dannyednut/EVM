@@ -205,7 +205,7 @@ contract FlashBot is Ownable {
 
         // avoid stack too deep error
         {
-            uint256 borrowAmount = calcMaxBorrowableAmount(orderedReserves);
+            uint256 borrowAmount = calcBorrowAmount(orderedReserves);
             (uint256 amount0Out, uint256 amount1Out) =
                 info.baseTokenSmaller ? (uint256(0), borrowAmount) : (borrowAmount, uint256(0));
             // borrow quote token on lower price pool, calculate how much debt we need to pay demoninated in base token
@@ -271,7 +271,7 @@ contract FlashBot is Ownable {
 
         (, , OrderedReserves memory orderedReserves) = getOrderedReserves(pool0, pool1, baseTokenSmaller);
         
-        uint256 borrowAmount = calcMaxBorrowableAmount(orderedReserves);
+        uint256 borrowAmount = calcBorrowAmount(orderedReserves);
         // borrow quote token on lower price pool,
         uint256 debtAmount = getAmountIn(borrowAmount, orderedReserves.a1, orderedReserves.b1);
         // sell borrowed quote token on higher price pool
@@ -335,60 +335,6 @@ contract FlashBot is Ownable {
         // 0 < x < b1 and 0 < x < b2
         require((x1 > 0 && x1 < b1 && x1 < b2) || (x2 > 0 && x2 < b1 && x2 < b2), 'Wrong input order');
         amount = (x1 > 0 && x1 < b1 && x1 < b2) ? uint256(x1) * d : uint256(x2) * d;
-    }
-
-    /// @dev Calculate the maximum base asset amount to borrow in order to get maximum profit during arbitrage
-    function calcMaxBorrowableAmount(OrderedReserves memory reserves) internal pure returns (uint256 amount) {
-        // Choose a smaller reserve as the base for calculation, considering which pool has more liquidity in its respective asset.
-        
-        int256 min = MyMathLibrary.min(int256(reserves.a1 * reserves.b2), int256(reserves.b1 * reserves.a2));
-
-        if(min <= 0){
-            return 0;
-        }
-
-        uint256 d;
-        if (min > 1e24) {
-            d = 1e20;
-        } else if (min > 1e23) {
-            d = 1e19;
-        } else if (min > 1e22) {
-            d = 1e18;
-        } else if (min > 1e21) {
-            d = 1e17;
-        } else if (min > 1e20) {
-            d = 1e16;
-        } else if (min > 1e19) {
-            d = 1e15;
-        } else if (min > 1e18) {
-            d = 1e14;
-        } else if (min > 1e17) {
-            d = 1e13;
-        } else if (min > 1e16) {
-            d = 1e12;
-        } else if (min > 1e15) {
-            d = 1e11;
-        } else {
-            d = 1e10;
-        }
-
-        (int256 a1, int256 a2, int256 b1, int256 b2) =
-            (int256(reserves.a1 / d), int256(reserves.a2 / d), int256(reserves.b1 / d), int256(reserves.b2 / d)); 
-        // Use a different approach based on the pools' reserve ratios to determine borrowable amount
-        require(a2 < b2, 'Wrong input order');
-        
-        int256 max = MyMathLibrary.max(MyMathLibrary.abs((a1 * b2) - (b1 * a2)),MyMathLibrary.abs( ((a1 * b2))));
-            
-            if(max == 0){
-                return 0;
-            }
-                
-        // Calculate the maximum borrowable amount by taking a percentage of `min` based on pool reserve ratios
-        uint256 borrowableAmount = MyMathLibrary.min(min, (max / max) * min);
-        
-        require(borrowableAmount > 0,'Wrong input order');
-            
-    return borrowableAmount;
     }
 
 

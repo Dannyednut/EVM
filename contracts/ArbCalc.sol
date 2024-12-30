@@ -56,7 +56,7 @@ contract ArbitrageCalculator is Reserves {
         (reserves.a1, reserves.b1) = getReservesV2(lowerPool);
         (reserves.a2, reserves.b2) = getReservesV2(higherPool);
 
-        amount = calcMaxBorrowableAmount(reserves);
+        amount = calcBorrowAmount(reserves);
     }
 
     function getBorrowAmountV3(address lowerPool, address higherPool) external view returns(uint256 amount){
@@ -65,18 +65,22 @@ contract ArbitrageCalculator is Reserves {
         (reserves.a1, reserves.b1) = getReservesV3(lowerPool);
         (reserves.a2, reserves.b2) = getReservesV3(higherPool);
 
-        amount = calcMaxBorrowableAmount(reserves);
+        amount = calcBorrowAmount(reserves);
     }
 
-    function calcMaxBorrowableAmount(OrderedReserves memory reserves) internal pure returns (uint256 amount) {
-        // Choose a smaller reserve as the base for calculation, considering which pool has more liquidity in its respective asset.
-        
-        int256 min = MyMathLibrary.min(int256(reserves.a1 * reserves.b2), int256(reserves.b1 * reserves.a2));
+    function calcBorrowAmount(OrderedReserves memory reserves) internal pure returns (uint256 amount) {
+        // we can't use a1,b1,a2,b2 directly, because it will result overflow/underflow on the intermediate result
+        // so we:
+        //    1. divide all the numbers by d to prevent from overflow/underflow
+        //    2. calculate the result by using above numbers
+        //    3. multiply d with the result to get the final result
+        // Note: this workaround is only suitable for ERC20 token with 18 decimals, which I believe most tokens do
 
-        if(min <= 0){
-            return 0;
-        }
+        uint256 min1 = reserves.a1 < reserves.b1 ? reserves.a1 : reserves.b1;
+        uint256 min2 = reserves.a2 < reserves.b2 ? reserves.a2 : reserves.b2;
+        uint256 min = min1 < min2 ? min1 : min2;
 
+        // choose appropriate number to divide based on the minimum number
         uint256 d;
         if (min > 1e24) {
             d = 1e20;
@@ -103,21 +107,54 @@ contract ArbitrageCalculator is Reserves {
         }
 
         (int256 a1, int256 a2, int256 b1, int256 b2) =
-            (int256(reserves.a1 / d), int256(reserves.a2 / d), int256(reserves.b1 / d), int256(reserves.b2 / d)); 
-        // Use a different approach based on the pools' reserve ratios to determine borrowable amount
-        require(a2 < b2, 'Wrong input order');
-        
-        int256 max = MyMathLibrary.max(MyMathLibrary.abs((a1 * b2) - (b1 * a2)),MyMathLibrary.abs( ((a1 * b2))));
-            
-            if(max == 0){
-                return 0;
-            }
-                
-        // Calculate the maximum borrowable amount by taking a percentage of `min` based on pool reserve ratios
-        int256 borrowableAmount = MyMathLibrary.min(min, (max / max) * min);
-        
-        require(borrowableAmount > 0,'Wrong input order');
-            
-    return uint256(borrowableAmount);
+            (int256(reserves.a1 / d), int256(reserves.a2 / d), int256(reserves.b1 / d), int256(reserves.b2 / d));
+
+        int256 a = a1 * b1 - a2 * b2;
+        int256 b = 2 * b1 * b2 * (a1 + a2);
+        int256 c = b1 * b2 * (a1 * b2 - a2 * b1);
+
+        (int256 x1, int256 x2) = calcSolutionForQuadratic(a, b, c);
+
+        // 0 < x < b1 and 0 < x < b2
+        require((x1 > 0 && x1 < b1 && x1 < b2) || (x2 > 0 && x2 < b1 && x2 < b2), 'Wrong input order');
+        amount = (x1 > 0 && x1 < b1 && x1 < b2) ? uint256(x1) * d : uint256(x2) * d;
     }
+
+    /// @dev find solution of quadratic equation: ax^2 + bx + c = 0, only return the positive solution
+    function calcSolutionForQuadratic(
+        int256 a,
+        int256 b,
+        int256 c
+    ) internal pure returns (int256 x1, int256 x2) {
+        int256 m = b**2 - 4 * a * c;
+        // m < 0 leads to complex number
+        require(m > 0, 'Complex number');
+
+        int256 sqrtM = int256(sqrt(uint256(m)));
+        x1 = (-b + sqrtM) / (2 * a);
+        x2 = (-b - sqrtM) / (2 * a);
+    }
+
+    /// @dev Newton’s method for caculating square root of n
+    function sqrt(uint256 n) internal pure returns (uint256 res) {
+        assert(n > 1);
+
+        // The scale factor is a crude way to turn everything into integer calcs.
+        // Actually do (n * 10 ^ 4) ^ (1/2)
+        uint256 _n = n * 10**6;
+        uint256 c = _n;
+        res = _n;
+
+        uint256 xi;
+        while (true) {
+            xi = (res + c / res) / 2;
+            // don't need be too precise to save gas
+            if (res - xi < 1000) {
+                break;
+            }
+            res = xi;
+        }
+        res = res / 10**3;
+    }
+
 }

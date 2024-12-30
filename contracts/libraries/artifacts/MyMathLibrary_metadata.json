@@ -33,11 +33,11 @@
 	},
 	"sources": {
 		"contracts/libraries/Math.sol": {
-			"keccak256": "0xcd5083c46e2c39df5a55242f0e0f8bd03b0354ead8852ebd38ad9d13278f8860",
+			"keccak256": "0xc2cd0e43f9a44e83139bfb65fcab4a096d1f8865cbd50bd49bbcb40276169e6f",
 			"license": "Unlicense",
 			"urls": [
-				"bzz-raw://444501db0276ccaa6c705502fd7f78ed94da350f2cb86a774036aa1428b21950",
-				"dweb:/ipfs/Qmb3Z56hz5dmeTrD97GzBe2F3cpb63Z77m3vZ87BogTdhK"
+				"bzz-raw://34ddcea9b696538de5718a9493098e23ef8aa2ef7d8053ad230c38e362a085f5",
+				"dweb:/ipfs/QmS1ixQbk4YRpnK253RGvo6uJ9nrnso8JjcfBUcnSWmMPP"
 			]
 		}
 	},

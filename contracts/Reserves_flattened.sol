@@ -697,6 +697,19 @@ abstract contract Ownable is Context {
     }
 }
 
+// File: contracts/interfaces/IUniswapV2Pair.sol
+
+pragma solidity ^0.8.20;
+
+interface IUniswapV2Pair {
+    function factory() external view returns (address);
+    function token0() external view returns (address);
+    function token1() external view returns (address);
+    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+    function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
+    function skim(address to) external;
+    function sync() external;
+}
 // File: contracts/Reserves.sol
 
 
@@ -722,8 +735,16 @@ contract Reserves{
         reserve = IERC20(token1).balanceOf(pair);
     }
 
-    function getReserves(address pair) external view returns (uint256 reserve0, uint256 reserve1){
+    function getReservesV3(address pair) public view returns (uint256 reserve0, uint256 reserve1){
         IUniswapV3Pool pool = IUniswapV3Pool(pair);
+        address token0 = pool.token0();
+        address token1 = pool.token1();
+        reserve0 = IERC20(token0).balanceOf(pair);
+        reserve1 = IERC20(token1).balanceOf(pair);
+    }
+
+    function getReservesV2(address pair) public view returns (uint256 reserve0, uint256 reserve1){
+        IUniswapV2Pair pool = IUniswapV2Pair(pair);
         address token0 = pool.token0();
         address token1 = pool.token1();
         reserve0 = IERC20(token0).balanceOf(pair);

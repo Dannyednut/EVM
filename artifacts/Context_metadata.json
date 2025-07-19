@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.17+commit.8df45f5f"
+		"version": "0.8.26+commit.8a97fa7a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -21,7 +21,7 @@
 		"compilationTarget": {
 			".deps/npm/@openzeppelin/contracts/utils/Context.sol": "Context"
 		},
-		"evmVersion": "london",
+		"evmVersion": "cancun",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -34,11 +34,11 @@
 	},
 	"sources": {
 		".deps/npm/@openzeppelin/contracts/utils/Context.sol": {
-			"keccak256": "0x92273814833589274fce26d1c0fd9c53ff76f30101917d01c4fa999ee0ab0ef5",
+			"keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7c30a84334c1c10971345dd37a7f8db95dcf92d1c3a15a1f2815b102246775ca",
-				"dweb:/ipfs/QmWZRtEynR8pSa8pxe9a6mqFJe5fTnB3d3g5GNt4S2T43n"
+				"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+				"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
 			]
 		}
 	},

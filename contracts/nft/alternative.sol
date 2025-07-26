@@ -1,122 +1,157 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "https://github.com/chiru-labs/ERC721A/blob/main/contracts/ERC721A.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-event Minted(address indexed to, uint256 tokenId);
-event TraitsAssigned(uint256 tokenId, string beastType);
-
-contract CryptoBeasts is ERC721A, Ownable {
-    enum SentimentLevel { VeryBearish, Bearish, Neutral, Bullish, VeryBullish }
+contract MarketSentimentNFT is ERC721Enumerable, Ownable {
+    enum Sentiment { VeryBearish, Bearish, Neutral, Bullish, VeryBullish }
+    enum MarketPhase { Reversal, Consolidation, Trend, Volatile, Stable }
 
     struct Traits {
-        string beastType; // "Bull" or "Bear"
-        string fur;
-        string eyes;
+        string character;
+        string mood;
         string background;
+        string aura;
+        string expression;
+        string accessory;
+        string weather;
     }
 
     mapping(uint256 => Traits) public tokenTraits;
-    uint256 public sentimentScore; // 0 - 100
-    SentimentLevel public currentSentiment;
 
-    constructor() ERC721A("Crypto Beasts", "CBEAST") Ownable(msg.sender){}
+    Sentiment public currentSentiment;
+    MarketPhase public currentMarketPhase;
+    uint256 public nextTokenId;
 
+    constructor() ERC721("MarketSentimentNFT", "MSNFT") Ownable(msg.sender) {}
+
+    // Public minting
     function mint(uint256 quantity) external {
-        uint256 startTokenId = _nextTokenId();
-        _safeMint(msg.sender, quantity);
-
         for (uint256 i = 0; i < quantity; i++) {
-            string memory beastType = (uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, i))) % 2 == 0)
-                ? "Bull" : "Bear";
-
-            uint256 tokenId = startTokenId + i;
-
-            tokenTraits[tokenId] = Traits({
-                beastType: beastType,
-                fur: "Obsidian",
-                eyes: "Emerald",
-                background: "Golden Peak"
-            });
-
-            emit TraitsAssigned(tokenId, beastType);
-            emit Minted(msg.sender, tokenId);
+            uint256 tokenId = nextTokenId++;
+            _safeMint(msg.sender, tokenId);
+            _assignTraits(tokenId);
         }
     }
 
-    function updateSentiment(uint256 newScore) external onlyOwner {
-        require(newScore <= 100, "Max sentiment is 100");
-        sentimentScore = newScore;
+    // Owner sets market sentiment + phase
+    function setMarketState(Sentiment sentiment, MarketPhase phase) external onlyOwner {
+        currentSentiment = sentiment;
+        currentMarketPhase = phase;
+        _evolveAllTraits();
+    }
 
-        if (newScore < 20) {
-            currentSentiment = SentimentLevel.VeryBearish;
-        } else if (newScore < 40) {
-            currentSentiment = SentimentLevel.Bearish;
-        } else if (newScore < 60) {
-            currentSentiment = SentimentLevel.Neutral;
-        } else if (newScore < 80) {
-            currentSentiment = SentimentLevel.Bullish;
-        } else {
-            currentSentiment = SentimentLevel.VeryBullish;
+    // Internal: Assign traits on mint
+    function _assignTraits(uint256 tokenId) internal {
+        tokenTraits[tokenId] = _generateTraits();
+    }
+
+    // Internal: Evolve traits based on current sentiment
+    function _evolveAllTraits() internal {
+        for (uint256 i = 0; i < totalSupply(); i++) {
+            uint256 tokenId = tokenByIndex(i);
+            tokenTraits[tokenId] = _generateTraits();
         }
     }
 
-    function debugToken(uint256 tokenId) public view returns (string memory, string memory, string memory, string memory) {
-        Traits memory t = tokenTraits[tokenId];
-        return (t.beastType, t.fur, t.eyes, t.background);
+    // Internal: Logic to generate traits
+    function _generateTraits() internal view returns (Traits memory traits) {
+        if (currentSentiment == Sentiment.VeryBearish) {
+            traits.character = "Bear";
+            traits.mood = "Panicked";
+            traits.background = "Crimson";
+            traits.aura = "Red Flame";
+            traits.expression = "Screaming";
+            traits.accessory = "Broken Chains";
+            traits.weather = "Thunderstorm";
+        } else if (currentSentiment == Sentiment.Bearish) {
+            traits.character = "Bear";
+            traits.mood = "Cautious";
+            traits.background = "Dark Gray";
+            traits.aura = "Smoke";
+            traits.expression = "Worried";
+            traits.accessory = "Shield";
+            traits.weather = "Rain";
+        } else if (currentSentiment == Sentiment.Neutral) {
+            traits.character = "Observer";
+            traits.mood = "Calm";
+            traits.background = "Blue Gray";
+            traits.aura = "Balance Field";
+            traits.expression = "Neutral";
+            traits.accessory = "Scroll";
+            traits.weather = "Cloudy";
+        } else if (currentSentiment == Sentiment.Bullish) {
+            traits.character = "Bull";
+            traits.mood = "Confident";
+            traits.background = "Sky Blue";
+            traits.aura = "Yellow Glow";
+            traits.expression = "Smiling";
+            traits.accessory = "Golden Horns";
+            traits.weather = "Sunny";
+        } else if (currentSentiment == Sentiment.VeryBullish) {
+            traits.character = "Bull";
+            traits.mood = "Euphoric";
+            traits.background = "Gold";
+            traits.aura = "Solar Flare";
+            traits.expression = "Ecstatic";
+            traits.accessory = "Wings";
+            traits.weather = "Rainbow";
+        }
     }
 
-
+    // Metadata
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Does not exist");
-
         Traits memory traits = tokenTraits[tokenId];
-        string memory svg = generateSVG(traits);
-
-        return string(abi.encodePacked(
-            "data:application/json;utf8,{",
-                '"name":"Crypto Beast #', _toString(tokenId), '",',
-                '"description":"Sentient NFT that evolves with market sentiment.",',
-                '"image":"data:image/svg+xml;utf8,', svg, '",',
-                '"attributes":[',
-                    '{"trait_type":"Type","value":"', traits.beastType, '"},',
-                    '{"trait_type":"Fur","value":"', traits.fur, '"},',
-                    '{"trait_type":"Eyes","value":"', traits.eyes, '"},',
-                    '{"trait_type":"Background","value":"', traits.background, '"},',
-                    '{"trait_type":"Sentiment","value":"', sentimentLevelToString(currentSentiment), '"}',
-                ']',
-            "}"
+        string memory json = string(abi.encodePacked(
+            '{"name": "MarketSentimentNFT #',
+            _toString(tokenId),
+            '", "description": "Dynamic NFT that evolves with market sentiment",',
+            '"attributes": [',
+                '{"trait_type": "Character", "value": "', traits.character, '"},',
+                '{"trait_type": "Mood", "value": "', traits.mood, '"},',
+                '{"trait_type": "Background", "value": "', traits.background, '"},',
+                '{"trait_type": "Aura", "value": "', traits.aura, '"},',
+                '{"trait_type": "Expression", "value": "', traits.expression, '"},',
+                '{"trait_type": "Accessory", "value": "', traits.accessory, '"},',
+                '{"trait_type": "Weather", "value": "', traits.weather, '"},',
+                '{"trait_type": "Sentiment", "value": "', _sentimentToString(currentSentiment), '"},',
+                '{"trait_type": "Market Phase", "value": "', _phaseToString(currentMarketPhase), '"}',
+            ']}'
         ));
+        return string(abi.encodePacked("data:application/json;utf8,", json));
     }
 
-    function generateSVG(Traits memory traits) internal view returns (string memory) {
-        string memory color = sentimentColor(currentSentiment);
-
-        return string(abi.encodePacked(
-            "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'>",
-            "<rect width='100%' height='100%' fill='", color, "'/>",
-            "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='24' fill='white'>",
-            traits.beastType, "</text>",
-            "</svg>"
-        ));
+    function _sentimentToString(Sentiment s) internal pure returns (string memory) {
+        if (s == Sentiment.VeryBearish) return "Very Bearish";
+        if (s == Sentiment.Bearish) return "Bearish";
+        if (s == Sentiment.Neutral) return "Neutral";
+        if (s == Sentiment.Bullish) return "Bullish";
+        return "Very Bullish";
     }
 
-    function sentimentColor(SentimentLevel level) internal pure returns (string memory) {
-        if (level == SentimentLevel.VeryBearish) return "#2c3e50";
-        if (level == SentimentLevel.Bearish) return "#34495e";
-        if (level == SentimentLevel.Neutral) return "#7f8c8d";
-        if (level == SentimentLevel.Bullish) return "#27ae60";
-        if (level == SentimentLevel.VeryBullish) return "#2ecc71";
-        return "#000000";
+    function _phaseToString(MarketPhase p) internal pure returns (string memory) {
+        if (p == MarketPhase.Reversal) return "Reversal";
+        if (p == MarketPhase.Consolidation) return "Consolidation";
+        if (p == MarketPhase.Trend) return "Trend";
+        if (p == MarketPhase.Volatile) return "Volatile";
+        return "Stable";
     }
 
-    function sentimentLevelToString(SentimentLevel level) internal pure returns (string memory) {
-        if (level == SentimentLevel.VeryBearish) return "Very Bearish";
-        if (level == SentimentLevel.Bearish) return "Bearish";
-        if (level == SentimentLevel.Neutral) return "Neutral";
-        if (level == SentimentLevel.Bullish) return "Bullish";
-        if (level == SentimentLevel.VeryBullish) return "Very Bullish";
-        return "Unknown";
+    function _toString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) return "0";
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
     }
 }

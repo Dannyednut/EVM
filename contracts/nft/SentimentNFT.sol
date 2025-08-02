@@ -78,8 +78,8 @@ contract SentimentNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     function getCurrentMintPrice() public view returns (uint256) {
         // Base price + (sentiment * 0.49 ETH) * sentiment multiplier
         uint256 sentimentPrice = BASE_PRICE + (currentSentiment * 49 ether / 100000);
-        uint256 multiplier = 1000 + (currentSentiment * 2); // 1x to 3x multiplier
-        return sentimentPrice * multiplier / 1000;
+        //uint256 multiplier = 1000 + (currentSentiment * 2); // 1x to 3x multiplier
+        return sentimentPrice /1000; //* multiplier / 1000;
     }
     
     /**

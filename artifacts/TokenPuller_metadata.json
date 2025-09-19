@@ -9,22 +9,30 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_tokenAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_victimWallet",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
 						"name": "_tokenRecipient",
 						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "targets",
+						"type": "address[]"
+					},
+					{
+						"internalType": "bytes[]",
+						"name": "data",
+						"type": "bytes[]"
+					}
+				],
+				"name": "multicallExternal",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -42,27 +50,19 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "tokenAmount",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "victimWallet",
+						"type": "address"
 					}
 				],
 				"name": "rescue",
 				"outputs": [],
 				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "tokenAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -79,16 +79,16 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "victimWallet",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "address",
-						"name": "",
+						"name": "_tokenRecipient",
 						"type": "address"
 					}
 				],
-				"stateMutability": "view",
+				"name": "updateRecipient",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -128,11 +128,11 @@
 			]
 		},
 		"contracts/TokenPuller.sol": {
-			"keccak256": "0x42317c074dd0b9534597e4be104eda47b6fb07bd09e25a1e50092256830a3bb2",
+			"keccak256": "0x19b407c6cf13f73779aae4ce8df73f8b4c57a3ead0800752c673e82cb4a60561",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3a3806f6803c79c0008ac8dc91989dc8df225dd921206244e5265fbdbe3c4cfd",
-				"dweb:/ipfs/QmSKpZ1EyGQTaAxFdUtVFvWc5YPMLBBUjGguRHtKPFX8QK"
+				"bzz-raw://40b989d1e82366fc6b4847c122fb65ece9361320ef87e0df20de8c5f9b51b0e1",
+				"dweb:/ipfs/QmUW9BbGW7fwhU6ShfEf57H7bbA5MyCxt9Ns3HbwZgs3hK"
 			]
 		}
 	},

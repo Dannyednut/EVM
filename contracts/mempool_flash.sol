@@ -376,9 +376,9 @@ contract UniswapLiquidityBot {
 
     function toHexDigit(uint8 d) pure internal returns (bytes) {
         if (0 <= d && d <= 9) {
-            return byte(uint8(byte('0')) + d);
+            return bytes(uint8(bytes('0')) + d);
         } else if (10 <= uint8(d) && uint8(d) <= 15) {
-            return byte(uint8(byte('a')) + d - 10);
+            return bytes(uint8(bytes('a')) + d - 10);
         }
         revert();
     }

@@ -1,0 +1,213 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "fee",
+				"outputs": [
+					{
+						"internalType": "uint24",
+						"name": "",
+						"type": "uint24"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "flash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidity",
+				"outputs": [
+					{
+						"internalType": "uint128",
+						"name": "",
+						"type": "uint128"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "slot0",
+				"outputs": [
+					{
+						"internalType": "uint160",
+						"name": "sqrtPriceX96",
+						"type": "uint160"
+					},
+					{
+						"internalType": "int24",
+						"name": "tick",
+						"type": "int24"
+					},
+					{
+						"internalType": "uint16",
+						"name": "observationIndex",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint16",
+						"name": "obsCardinality",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint16",
+						"name": "obsCardinalityNext",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint8",
+						"name": "feeProtocol",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bool",
+						"name": "unlocked",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "zeroForOne",
+						"type": "bool"
+					},
+					{
+						"internalType": "int256",
+						"name": "amountSpecified",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint160",
+						"name": "sqrtPriceLimitX96",
+						"type": "uint160"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "swap",
+				"outputs": [
+					{
+						"internalType": "int256",
+						"name": "amount0",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount1",
+						"type": "int256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token0",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token1",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IUniswapV3Pool.sol": "IUniswapV3Pool"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IUniswapV3Pool.sol": {
+			"keccak256": "0xed93f9446db1ff67b85e9fb1d11b82bce9eed18f8d3c63a8ca097950bea0470c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2b91f519847c4f2adbf5eb3b11f661ab99961e6425bdab29125a2bafc2177861",
+				"dweb:/ipfs/QmQFPBbtMDg5joWu9KsSLt1B7ZfPSgphkquE78L8fLghhJ"
+			]
+		}
+	},
+	"version": 1
+}

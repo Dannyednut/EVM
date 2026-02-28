@@ -1,0 +1,262 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "fee",
+				"outputs": [
+					{
+						"internalType": "uint24",
+						"name": "",
+						"type": "uint24"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "flash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidity",
+				"outputs": [
+					{
+						"internalType": "uint128",
+						"name": "",
+						"type": "uint128"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "slot0",
+				"outputs": [
+					{
+						"internalType": "uint160",
+						"name": "sqrtPriceX96",
+						"type": "uint160"
+					},
+					{
+						"internalType": "int24",
+						"name": "tick",
+						"type": "int24"
+					},
+					{
+						"internalType": "uint16",
+						"name": "observationIndex",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint16",
+						"name": "obsCardinality",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint16",
+						"name": "obsCardinalityNext",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint8",
+						"name": "feeProtocol",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bool",
+						"name": "unlocked",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "zeroForOne",
+						"type": "bool"
+					},
+					{
+						"internalType": "int256",
+						"name": "amountSpecified",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint160",
+						"name": "sqrtPriceLimitX96",
+						"type": "uint160"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "swap",
+				"outputs": [
+					{
+						"internalType": "int256",
+						"name": "amount0",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount1",
+						"type": "int256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token0",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token1",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "Extended pool interface to access tickBitmap getter and fee/tickSpacing",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/libraries/Helper.sol": "IUniswapV3PoolExt"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0x74ed01eb66b923d0d0cfe3be84604ac04b76482a55f9dd655e1ef4d367f95bc2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5282825a626cfe924e504274b864a652b0023591fa66f06a067b25b51ba9b303",
+				"dweb:/ipfs/QmeCfPykghhMc81VJTrHTC7sF6CRvaA1FXVq2pJhwYp1dV"
+			]
+		},
+		"contracts/interfaces/IQuoter.sol": {
+			"keccak256": "0xa82e8c69928b8f2ed18dc4e2e78bc423c1b4cd485a6acc8ef17cd59e6478a6c2",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://b6293247d260411ffafd3f157792e3dccd9e5a754465eb717845c57ab2ff8277",
+				"dweb:/ipfs/QmSPz9uSKRVFGpbpsJTqacXcbXLLka2fHKmXvGeu5stVS8"
+			]
+		},
+		"contracts/interfaces/IUniswapV2Pair.sol": {
+			"keccak256": "0x6593d3e0444a03aabacb705c16faa5a6e345513f0a6c6a8f159c5e214bb7b385",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://4e13b8a298f34db5a1ffcb0e34c517798ff7e23328bc41553281de74d798062d",
+				"dweb:/ipfs/QmRPBtk5wnauyJXBDE7SQSMbV1zcDR2ZoM7iBumfZTee76"
+			]
+		},
+		"contracts/interfaces/IUniswapV3Pool.sol": {
+			"keccak256": "0xed93f9446db1ff67b85e9fb1d11b82bce9eed18f8d3c63a8ca097950bea0470c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2b91f519847c4f2adbf5eb3b11f661ab99961e6425bdab29125a2bafc2177861",
+				"dweb:/ipfs/QmQFPBbtMDg5joWu9KsSLt1B7ZfPSgphkquE78L8fLghhJ"
+			]
+		},
+		"contracts/libraries/Decimal.sol": {
+			"keccak256": "0x3214ec23db268262846f8fe35d44f88a7c772f4e13ca6ea94b23c8114f9bda97",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://19ce3cca2df0da4ca43a3169b41f23a11ead5a910c900bbba7d7eaed4c50cada",
+				"dweb:/ipfs/QmbAHZySkkpr3FvEBYSyXb77SyBjZxorgcfXq5uynw9q6C"
+			]
+		},
+		"contracts/libraries/Helper.sol": {
+			"keccak256": "0xba3c435c1c7e944c4e42e928fb9fdcb0a236a4d4ca2ac26ce02ef02025f3de5f",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://3d15def38e6d2e7adade7b1d4ef499c6bd8a51735bac07e48ed6d98158e6a816",
+				"dweb:/ipfs/QmRTqu9gDaKyYpxswPMkBZpajcxdNoJkPViR6A5KEGw876"
+			]
+		},
+		"contracts/libraries/SafeMathCopy.sol": {
+			"keccak256": "0x3bf96f65037e8d46631354034f41317b8d1fda916b9c6ca3f4960328d836e298",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e56b1f31863ef8196397511b358d219343433fa3fdf480fa2993f6621e29a28e",
+				"dweb:/ipfs/Qmb6Z7apFEx8aEm8474xiDgD1vhk5CJW5EvD3Qzdyf6njw"
+			]
+		}
+	},
+	"version": 1
+}

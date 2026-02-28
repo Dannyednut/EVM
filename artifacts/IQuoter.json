@@ -1,0 +1,382 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"sepolia:11155111": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"quoteExactInput(bytes,uint256)": "cdca1753",
+			"quoteExactInputSingle((address,address,uint256,uint24,uint160))": "c6a5026a",
+			"quoteExactInputSingleWithPool((address,address,uint256,address,uint24,uint160))": "d85c3d63",
+			"quoteExactOutput(bytes,uint256)": "2f80bb1d",
+			"quoteExactOutputSingle((address,address,uint256,uint24,uint160))": "bd21704a",
+			"quoteExactOutputSingleWithPool((address,address,uint256,uint24,address,uint160))": "86e3a7cf"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "bytes",
+					"name": "path",
+					"type": "bytes"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amountIn",
+					"type": "uint256"
+				}
+			],
+			"name": "quoteExactInput",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amountOut",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint160[]",
+					"name": "sqrtPriceX96AfterList",
+					"type": "uint160[]"
+				},
+				{
+					"internalType": "uint32[]",
+					"name": "initializedTicksCrossedList",
+					"type": "uint32[]"
+				},
+				{
+					"internalType": "uint256",
+					"name": "gasEstimate",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "tokenIn",
+							"type": "address"
+						},
+						{
+							"internalType": "address",
+							"name": "tokenOut",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amountIn",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint24",
+							"name": "fee",
+							"type": "uint24"
+						},
+						{
+							"internalType": "uint160",
+							"name": "sqrtPriceLimitX96",
+							"type": "uint160"
+						}
+					],
+					"internalType": "struct IQuoter.QuoteExactInputSingleParams",
+					"name": "params",
+					"type": "tuple"
+				}
+			],
+			"name": "quoteExactInputSingle",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amountOut",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint160",
+					"name": "sqrtPriceX96After",
+					"type": "uint160"
+				},
+				{
+					"internalType": "uint32",
+					"name": "initializedTicksCrossed",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "gasEstimate",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "tokenIn",
+							"type": "address"
+						},
+						{
+							"internalType": "address",
+							"name": "tokenOut",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amountIn",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address",
+							"name": "pool",
+							"type": "address"
+						},
+						{
+							"internalType": "uint24",
+							"name": "fee",
+							"type": "uint24"
+						},
+						{
+							"internalType": "uint160",
+							"name": "sqrtPriceLimitX96",
+							"type": "uint160"
+						}
+					],
+					"internalType": "struct IQuoter.QuoteExactInputSingleWithPoolParams",
+					"name": "params",
+					"type": "tuple"
+				}
+			],
+			"name": "quoteExactInputSingleWithPool",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amountOut",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint160",
+					"name": "sqrtPriceX96After",
+					"type": "uint160"
+				},
+				{
+					"internalType": "uint32",
+					"name": "initializedTicksCrossed",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "gasEstimate",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes",
+					"name": "path",
+					"type": "bytes"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amountOut",
+					"type": "uint256"
+				}
+			],
+			"name": "quoteExactOutput",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amountIn",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint160[]",
+					"name": "sqrtPriceX96AfterList",
+					"type": "uint160[]"
+				},
+				{
+					"internalType": "uint32[]",
+					"name": "initializedTicksCrossedList",
+					"type": "uint32[]"
+				},
+				{
+					"internalType": "uint256",
+					"name": "gasEstimate",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "tokenIn",
+							"type": "address"
+						},
+						{
+							"internalType": "address",
+							"name": "tokenOut",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint24",
+							"name": "fee",
+							"type": "uint24"
+						},
+						{
+							"internalType": "uint160",
+							"name": "sqrtPriceLimitX96",
+							"type": "uint160"
+						}
+					],
+					"internalType": "struct IQuoter.QuoteExactOutputSingleParams",
+					"name": "params",
+					"type": "tuple"
+				}
+			],
+			"name": "quoteExactOutputSingle",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amountIn",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint160",
+					"name": "sqrtPriceX96After",
+					"type": "uint160"
+				},
+				{
+					"internalType": "uint32",
+					"name": "initializedTicksCrossed",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "gasEstimate",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "tokenIn",
+							"type": "address"
+						},
+						{
+							"internalType": "address",
+							"name": "tokenOut",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint24",
+							"name": "fee",
+							"type": "uint24"
+						},
+						{
+							"internalType": "address",
+							"name": "pool",
+							"type": "address"
+						},
+						{
+							"internalType": "uint160",
+							"name": "sqrtPriceLimitX96",
+							"type": "uint160"
+						}
+					],
+					"internalType": "struct IQuoter.QuoteExactOutputSingleWithPoolParams",
+					"name": "params",
+					"type": "tuple"
+				}
+			],
+			"name": "quoteExactOutputSingleWithPool",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amountIn",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint160",
+					"name": "sqrtPriceX96After",
+					"type": "uint160"
+				},
+				{
+					"internalType": "uint32",
+					"name": "initializedTicksCrossed",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "gasEstimate",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+	]
+}

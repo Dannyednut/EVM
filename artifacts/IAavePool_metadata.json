@@ -1,0 +1,89 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "receiverAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "assets",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "amounts",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "modes",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address",
+						"name": "onBehalfOf",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "params",
+						"type": "bytes"
+					},
+					{
+						"internalType": "uint16",
+						"name": "referralCode",
+						"type": "uint16"
+					}
+				],
+				"name": "flashLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IAavePool.sol": "IAavePool"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IAavePool.sol": {
+			"keccak256": "0xe27eba9d547b9ea5100ca02c716e20ef5b8eac175b4fc20c3fbc181f9b1405c3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9f03e7a63f548a008e4b4a064ac98892f19fcd95cf9ae7648392b5c6c85d9514",
+				"dweb:/ipfs/QmXbjt8uGXtnqT8tSHgAFiMuGJENDSBcHh33DTh7Ed7vue"
+			]
+		}
+	},
+	"version": 1
+}

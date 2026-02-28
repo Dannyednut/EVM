@@ -119,7 +119,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			".deps/github/OpenZeppelin/openzeppelin-contracts/contracts/access/Ownable.sol": "Ownable"
+			".deps/npm/@openzeppelin/contracts/access/Ownable.sol": "Ownable"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -127,21 +127,22 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
-			"runs": 200
+			"enabled": true,
+			"runs": 100
 		},
-		"remappings": []
+		"remappings": [],
+		"viaIR": true
 	},
 	"sources": {
-		".deps/github/OpenZeppelin/openzeppelin-contracts/contracts/access/Ownable.sol": {
-			"keccak256": "0x2e4fb21f5582d368da0b1bf91828b331528a2aeab61b9affd0333aaaef2f64d8",
+		".deps/npm/@openzeppelin/contracts/access/Ownable.sol": {
+			"keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d24db1dc937728adf9dba8405d5d84e843e6c52832773863635add879b3a72b4",
-				"dweb:/ipfs/QmTc4tuGuXRGGTEtYiwzPLCzoymhkdpHcYc2fc27tAxPf7"
+				"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
+				"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
 			]
 		},
-		".deps/github/OpenZeppelin/openzeppelin-contracts/contracts/utils/Context.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/Context.sol": {
 			"keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
 			"license": "MIT",
 			"urls": [

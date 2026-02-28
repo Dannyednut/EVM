@@ -1,0 +1,74 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "tokens",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "amounts",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bytes",
+						"name": "userData",
+						"type": "bytes"
+					}
+				],
+				"name": "flashLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IBalancerVault.sol": "IBalancerVault"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IBalancerVault.sol": {
+			"keccak256": "0x5ec82cb5e72e38eddcdbd6ed99350537114f68bf14f66a07a559c9d3a2a2830d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6b29f7135d42f77cfa92f5c192558ecba8390ace62a8f79c0f0aea79050e35cf",
+				"dweb:/ipfs/QmPBHYLAn4DDZhymCioyfbJcuNB6bF6Km4HL8gYTcn39QV"
+			]
+		}
+	},
+	"version": 1
+}

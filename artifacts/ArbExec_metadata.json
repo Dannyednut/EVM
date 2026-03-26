@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.26+commit.8a97fa7a"
+		"version": "0.8.20+commit.a1b79de6"
 	},
 	"language": "Solidity",
 	"output": {
@@ -615,21 +615,129 @@
 			},
 			"kind": "dev",
 			"methods": {
+				"constructor": {
+					"params": {
+						"_a": "Aave V3 lending pool address, or address(0) to disable Aave flash loans.",
+						"_b": "Balancer Vault address, or address(0) to disable Balancer flash loans.",
+						"_q": "View-only Quoter address for simulating V3 swap outputs.",
+						"_w": "WETH token address used for unwrapping profits."
+					}
+				},
+				"execute((address[],address[],uint256,address,address,uint24[],uint256,uint8),bool,bool)": {
+					"details": "Validates the path, determines the borrow amount if not supplied, then      initiates a flash loan or flash swap from the preferred source.      Use the `ad` return value from getProfit() as the `arb` argument here      to ensure the borrow amount and sorted pools are consistent with the simulation.",
+					"params": {
+						"arb": "Arbitrage parameters including token path, pools, fees, and constraints.",
+						"forceAave": "If true, forces borrowing via Aave flash loan (requires AAVE_POOL set).",
+						"forceBalancer": "If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).                      forceAave takes precedence over forceBalancer if both are true.                      If neither is true, borrows via a pool flash swap."
+					}
+				},
+				"executeOperation(address[],uint256[],uint256[],address,bytes)": {
+					"details": "Called by the Aave pool after funds are transferred to this contract.      Executes the arb trade, then repays the loan plus Aave's premium.      Reverts if caller is not the expected Aave pool or initiator is not this contract.",
+					"params": {
+						"amounts": "Amounts borrowed (single element array).",
+						"assets": "Token addresses borrowed (single element array).",
+						"initiator": "Must equal address(this) — guards against third-party flash loan injection.",
+						"params": "ABI-encoded (ArbData, borrowAmt, startBalance).",
+						"premiums": "Aave fees owed on top of the borrowed amounts."
+					},
+					"returns": {
+						"_0": "True on success, as required by the Aave interface."
+					}
+				},
+				"getProfit((address[],address[],uint256,address,address,uint24[],uint256,uint8))": {
+					"details": "Safe to call from view contexts and other contracts since it uses the view-only Quoter.      Internally calls _determineBorrowAmount to sort pools and set amountIn if not supplied.      V3 hops are simulated via the Quoter; V2 hops use the constant-product reserve formula.      The returned `ad` struct should be passed directly to execute() to ensure the borrow      amount and pool ordering used in simulation match what execute() will use.",
+					"params": {
+						"arb": "Arbitrage parameters to simulate. amountIn may be 0 for auto-calculation."
+					},
+					"returns": {
+						"ad": "    Updated ArbData with amountIn set and pools sorted — pass this to execute().",
+						"profit": "Expected profit in tokenIn after repaying the borrow. 0 means not profitable."
+					}
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
+				},
+				"receiveFlashLoan(address[],uint256[],uint256[],bytes)": {
+					"details": "Called by the Balancer Vault after funds are transferred to this contract.      Executes the arb trade, then repays the loan plus any Balancer fees.      Reverts if caller is not the expected Balancer Vault.",
+					"params": {
+						"amounts": "Amounts borrowed.",
+						"feeAmounts": "Balancer fees owed on top of the borrowed amounts.",
+						"tokens": "Token addresses borrowed.",
+						"userData": "ABI-encoded (ArbData, borrowAmt, startBalance)."
+					}
 				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				},
+				"uniswapV2Call(address,uint256,uint256,bytes)": {
+					"details": "Called by a V2 pair after tokens are transferred to this contract.      Also invoked by the fallback for non-standard V2 fork callback selectors.      Mode 0: repays the borrowed token plus 0.3% fee to the borrow pair.      Mode 1: repays the debt token (the other side of the pair) computed at initiation.      Reverts if caller is not the expected pair or sender is not this contract.",
+					"params": {
+						"amount0": "Amount of token0 received from the pair (0 if token1 was borrowed).",
+						"amount1": "Amount of token1 received from the pair (0 if token0 was borrowed).",
+						"data": "ABI-encoded V2CB struct containing arb params and repayment details.",
+						"sender": "Must equal address(this) — the initiator of the flash swap."
+					}
+				},
+				"uniswapV3FlashCallback(uint256,uint256,bytes)": {
+					"details": "Called by a V3 pool after pool.flash() transfers tokens to this contract.      Executes the arb trade then repays the pool the borrowed amount plus fees.      Reverts if caller is not the expected pool.",
+					"params": {
+						"data": "ABI-encoded (ArbData, borrowAmt, startBalance).",
+						"f0": "Fee owed on token0 (0 if token1 was borrowed).",
+						"f1": "Fee owed on token1 (0 if token0 was borrowed)."
+					}
+				},
+				"uniswapV3SwapCallback(int256,int256,bytes)": {
+					"details": "Called by a V3 pool during swap execution.      Handles two internal modes encoded in the data payload:      Mode 1 (internal swap hop): called during _swap() for each V3 hop in the trade path.                                  Transfers the owed token directly to the pool and returns.      Mode 2 (flash swap entry):  called when pools[0] is used as the flash swap source.                                  Executes the arb trade starting from pools[1], then repays                                  the owed amounts to pools[0].      Reverts if caller is not the expected pool.",
+					"params": {
+						"a0": "Amount of token0 owed to the pool (positive) or received (negative).",
+						"a1": "Amount of token1 owed to the pool (positive) or received (negative).",
+						"data": "ABI-encoded payload beginning with a uint8 mode discriminator."
+					}
+				},
+				"withdraw(address,uint256)": {
+					"details": "Passing amount = 0 withdraws the entire balance of the token.      Passing token = address(0) ignores amount and withdraws all ETH.",
+					"params": {
+						"amount": "The amount to withdraw, or 0 to withdraw the full balance.",
+						"token": "The ERC20 token address to withdraw, or address(0) for ETH."
+					}
 				}
 			},
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"constructor": {
+					"notice": "Deploys the contract and sets immutable protocol addresses."
+				},
+				"execute((address[],address[],uint256,address,address,uint24[],uint256,uint8),bool,bool)": {
+					"notice": "Entry point for executing an arbitrage opportunity."
+				},
+				"executeOperation(address[],uint256[],uint256[],address,bytes)": {
+					"notice": "Aave flash loan callback."
+				},
+				"getProfit((address[],address[],uint256,address,address,uint24[],uint256,uint8))": {
+					"notice": "Simulates an arb opportunity and returns the expected profit."
+				},
+				"receiveFlashLoan(address[],uint256[],uint256[],bytes)": {
+					"notice": "Balancer flash loan callback."
+				},
+				"uniswapV2Call(address,uint256,uint256,bytes)": {
+					"notice": "Uniswap V2 flash swap callback."
+				},
+				"uniswapV3FlashCallback(uint256,uint256,bytes)": {
+					"notice": "Uniswap V3 flash callback."
+				},
+				"uniswapV3SwapCallback(int256,int256,bytes)": {
+					"notice": "Uniswap V3 swap callback."
+				},
+				"withdraw(address,uint256)": {
+					"notice": "Withdraws tokens or ETH from the contract to the owner."
+				}
+			},
 			"version": 1
 		}
 	},
@@ -637,7 +745,7 @@
 		"compilationTarget": {
 			"contracts/ArbExec.sol": "ArbExec"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -691,11 +799,11 @@
 			]
 		},
 		"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
-			"keccak256": "0x982c5cb790ab941d1e04f807120a71709d4c313ba0bfc16006447ffbd27fbbd5",
+			"keccak256": "0x304d732678032a9781ae85c8f204c8fba3d3a5e31c02616964e75cfdc5049098",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8150ceb4ac947e8a442b2a9c017e01e880b2be2dd958f1fa9bc405f4c5a86508",
-				"dweb:/ipfs/QmbcBmFX66AY6Kbhnd5gx7zpkgqnUafo43XnmayAM7zVdB"
+				"bzz-raw://299ced486011781dc98f638059678323c03079fefae1482abaa2135b22fa92d0",
+				"dweb:/ipfs/QmbZNbcPTBxNvwChavN2kkZZs7xHhYL7mv51KrxMhsMs3j"
 			]
 		},
 		"@openzeppelin/contracts/utils/Context.sol": {
@@ -707,11 +815,19 @@
 			]
 		},
 		"@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
-			"keccak256": "0x11a5a79827df29e915a12740caf62fe21ebe27c08c9ae3e09abe9ee3ba3866d3",
+			"keccak256": "0xa516cbf1c7d15d3517c2d668601ce016c54395bf5171918a14e2686977465f53",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3cf0c69ab827e3251db9ee6a50647d62c90ba580a4d7bbff21f2bea39e7b2f4a",
-				"dweb:/ipfs/QmZiKwtKU1SBX4RGfQtY7PZfiapbbu6SZ9vizGQD9UHjRA"
+				"bzz-raw://1e1d079e8edfb58efd23a311e315a4807b01b5d1cf153f8fa2d0608b9dec3e99",
+				"dweb:/ipfs/QmTBExeX2SDTkn5xbk5ssbYSx7VqRp9H4Ux1CY4uQM4b9N"
+			]
+		},
+		"@openzeppelin/contracts/utils/StorageSlot.sol": {
+			"keccak256": "0xcf74f855663ce2ae00ed8352666b7935f6cddea2932fdf2c3ecd30a9b1cd0e97",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9f660b1f351b757dfe01438e59888f31f33ded3afcf5cb5b0d9bf9aa6f320a8b",
+				"dweb:/ipfs/QmarDJ5hZEgBtCmmrVzEZWjub9769eD686jmzb2XpSU1cM"
 			]
 		},
 		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
@@ -723,11 +839,11 @@
 			]
 		},
 		"contracts/ArbExec.sol": {
-			"keccak256": "0x6e6c882d5128ecb798036a358a9af1009d4e18137d97f118c6a7baf0b0ca04aa",
+			"keccak256": "0xea669d2bd8420959312e5e469233ff2c75982cb1e595e1ab72bc6d1c0825c596",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ce12a9c032866b5649762a311146a9e70b3a47c6dfd930b18ccc85a4f854ccd2",
-				"dweb:/ipfs/QmVW3qxzvNggQ9mAbUNJUTiQpeW585iTXAgr8vTHcX2HFg"
+				"bzz-raw://7db4a26b8264e166b0dc1bfbb71512449651d1f7454724312c143f741e9d796d",
+				"dweb:/ipfs/QmeMuFU7wBcCtRfiurUwv6xnzd83zrx88LFMv8dVRtBj7P"
 			]
 		},
 		"contracts/interfaces/IAavePool.sol": {

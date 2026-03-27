@@ -141,34 +141,10 @@ contract ArbExec is Ownable, ReentrancyGuard {
         if (arb.amountIn > 0) return arb;
 
         if (arb.pools.length == 2) {
-            bool v3_0 = Helper._isUniswapV3(arb.pools[0]);
-            bool v3_1 = Helper._isUniswapV3(arb.pools[1]);
-            uint256 borrowAmt;
-
-            if (!v3_0 && !v3_1) {
-                // Pure V2: derive optimal borrow from reserve ratios
-                (uint112 r0,  uint112 r1,)  = IUniswapV2Pair(arb.pools[0]).getReserves();
-                (uint112 rs0, uint112 rs1,) = IUniswapV2Pair(arb.pools[1]).getReserves();
-
-                uint256 resInLow   = borrowIs0 ? uint256(r0)  : uint256(r1);
-                uint256 resOutLow  = borrowIs0 ? uint256(r1)  : uint256(r0);
-                uint256 resInHigh  = borrowIs0 ? uint256(rs1) : uint256(rs0);
-                uint256 resOutHigh = borrowIs0 ? uint256(rs0) : uint256(rs1);
-
-                borrowAmt = Helper.calcOptimalV2Borrow(
-                    resInLow, resOutLow, resInHigh, resOutHigh, arb.mode
-                );
-                arb.amountIn = borrowAmt;
-                return arb;
-            } else if (v3_0 && v3_1) {
-                // Pure V3: estimate optimal borrow using the Quoter
-                borrowAmt = Helper.estimateOptimalV3Borrow(arb.pools, arb.fees, Quoter);
-                arb.amountIn = borrowAmt;
-                return arb;
-            }
-            // Mixed V2/V3: use hybrid calculation
-            borrowAmt = Helper.calcOptimalV2V3(arb.pools, arb.mode);
-            arb.amountIn = borrowAmt;
+            // calcOptimalBorrow handles V2/V2, V3/V3, and V2/V3 transparently.
+            // pools[] and tokens[] are already sorted by sortPools() above.
+            // tokens[0] = tokenIn, tokens[1] = intermediate
+            arb.amountIn = Helper.calcOptimalBorrow(arb.pools, arb.tokens, arb.fees, arb.mode);
             return arb;
         }
 

@@ -152,8 +152,8 @@ library Helper {
         address[] memory tokens,
         uint24[] memory fees,
         bool borrowTokenSmaller
-    ) internal view returns (address[] memory, address[] memory) {
-        if (pools.length > 2) return (pools, tokens);
+    ) internal view returns (address[] memory, address[] memory, uint24[] memory) {
+        if (pools.length > 2) return (pools, tokens, fees);
 
         bool isV3_0 = _isUniswapV3(pools[0]);
         bool isV3_1 = _isUniswapV3(pools[1]);
@@ -178,9 +178,9 @@ library Helper {
 
         tokens[0] = t0;
         tokens[1] = t1;
-        tokens[2] = tokens[0]; // triangular: end token = start token
+        tokens[2] = tokens[0]; // end token = start token
 
-        return (pools, tokens);
+        return (pools, tokens, fees);
     }
 
     function _getV2Prices(address[] memory pools, bool borrowTokenSmaller)

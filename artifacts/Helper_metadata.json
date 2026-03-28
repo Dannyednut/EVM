@@ -74,11 +74,11 @@
 			]
 		},
 		"contracts/libraries/Helper.sol": {
-			"keccak256": "0x9da57b18d8246710458551e98a12c90bd2c0edcf68bd545437807b4ac193a3c2",
+			"keccak256": "0x59f85db9600022aa8f449d33832d61c22efe918e5c280cf8a847963f37a1cd25",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://4ab6bae82be23028c141f582bfa772f539ef5ef465f056dd065c8c3bd8a9b35c",
-				"dweb:/ipfs/QmULpozo6dz8Xgs56UvKtX5EZPTCqHbaEJcJqAyRR6HGyK"
+				"bzz-raw://d705cfcf2ec91a5918c0b4fbc1a823f59205f3d8706562fd5270925234352d9f",
+				"dweb:/ipfs/QmU6RX68wDgVxu7RtYJV7BGffLf8ZERLrD5xmUFtPy21ai"
 			]
 		},
 		"contracts/libraries/SafeMathCopy.sol": {

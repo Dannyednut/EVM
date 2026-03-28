@@ -73,7 +73,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
     ///      Reverts if callback mismatch or if the payload is too short.
     fallback(bytes calldata _input) external returns (bytes memory) {
         require(_input.length >= 4, "input too short");
-        require(_expectedCallback != address(0), "pool auth");
+        require(_expectedCallback == msg.sender, "pool auth");
         (address sender, uint256 amount0, uint256 amount1, bytes memory data) = abi.decode(_input[4:], (address, uint256, uint256, bytes));
         uniswapV2Call(sender, amount0, amount1, data);
         return "";
@@ -128,7 +128,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
 
         IUniswapV2Pair p0 = IUniswapV2Pair(arb.pools[0]);
         bool borrowIs0 = (arb.tokenIn == p0.token0());
-        (arb.pools, arb.tokens) = Helper.sortPools(arb.pools, arb.tokens, arb.fees, borrowIs0);
+        (arb.pools, arb.tokens, arb.fees) = Helper.sortPools(arb.pools, arb.tokens, arb.fees, borrowIs0);
 
         if (arb.pools.length == 2) {
             IUniswapV2Pair p1 = IUniswapV2Pair(arb.pools[1]);
@@ -516,7 +516,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
         )
     {
         ad = _determineBorrowAmount(arb);
-        require(ad.amountIn > 0, "bad amt");
+        require(ad.amountIn > 0, "no arb");
 
         require(ad.pools.length == ad.tokens.length - 1, "invalid pools/tokens length");
         require(ad.pools.length == ad.fees.length, "pools/fees mismatch");

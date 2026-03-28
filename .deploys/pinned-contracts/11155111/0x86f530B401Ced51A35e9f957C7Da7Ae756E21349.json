@@ -1,6 +1,7 @@
 {
   "name": "ArbExec",
-  "address": "0x998217D0200C256E4459E9991E63C487EcbC3a4E",
+  "address": "0x86f530B401Ced51A35e9f957C7Da7Ae756E21349",
+  "timestamp": 1774697604621,
   "abi": [
     {
       "inputs": [
@@ -588,5 +589,5 @@
     }
   ],
   "filePath": "EVM-1774295073227/contracts/ArbExec.sol",
-  "pinnedAt": 1774535653477
+  "pinnedAt": 1774698410813
 }

@@ -128,7 +128,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
 
         IUniswapV2Pair p0 = IUniswapV2Pair(arb.pools[0]);
         bool borrowIs0 = (arb.tokenIn == p0.token0());
-        (arb.pools, arb.tokens) = Helper.sortPools(arb.pools, arb.tokens, borrowIs0);
+        (arb.pools, arb.tokens) = Helper.sortPools(arb.pools, arb.tokens, arb.fees, borrowIs0);
 
         if (arb.pools.length == 2) {
             IUniswapV2Pair p1 = IUniswapV2Pair(arb.pools[1]);
@@ -370,7 +370,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
         uint256 borrowed = borrowedIs0 ? uint256(-a0) : uint256(-a1);
         address t0 = IUniswapV3Pool(msg.sender).token0();
         address t1 = IUniswapV3Pool(msg.sender).token1();
-        address debtToken = borrowedIs0 ? t0 : t1;
+        address debtToken = borrowedIs0 ? t1 : t0;
 
         address finalToken = arb.tokens[arb.tokens.length - 1];
         require(debtToken == finalToken, "Mode 1: Path must end with Debt Token");

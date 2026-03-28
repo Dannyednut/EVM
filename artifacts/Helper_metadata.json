@@ -1,88 +1,10 @@
 {
 	"compiler": {
-		"version": "0.8.26+commit.8a97fa7a"
+		"version": "0.8.20+commit.a1b79de6"
 	},
 	"language": "Solidity",
 	"output": {
-		"abi": [
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "pool",
-						"type": "address"
-					}
-				],
-				"name": "getPriceV3",
-				"outputs": [
-					{
-						"internalType": "uint160",
-						"name": "sqrtPriceX96",
-						"type": "uint160"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price1Per0Q96",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price0Per1Q96",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "pair",
-						"type": "address"
-					}
-				],
-				"name": "getReservesV2",
-				"outputs": [
-					{
-						"internalType": "uint112",
-						"name": "reserve0",
-						"type": "uint112"
-					},
-					{
-						"internalType": "uint112",
-						"name": "reserve1",
-						"type": "uint112"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "pool",
-						"type": "address"
-					}
-				],
-				"name": "getReservesV3",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "balance0",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "balance1",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			}
-		],
+		"abi": [],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {},
@@ -90,17 +12,7 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {
-				"getPriceV3(address)": {
-					"notice": "Get V3 pool price two ways: returns sqrtPriceX96 and price token1/token0 in Q96"
-				},
-				"getReservesV2(address)": {
-					"notice": "Get reserves from Uniswap V2 pair (native getReserves)"
-				},
-				"getReservesV3(address)": {
-					"notice": "Raw ERC20 balances inside V3 pool (not for pricing)"
-				}
-			},
+			"methods": {},
 			"version": 1
 		}
 	},
@@ -108,16 +20,17 @@
 		"compilationTarget": {
 			"contracts/libraries/Helper.sol": "Helper"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
-		"remappings": []
+		"remappings": [],
+		"viaIR": true
 	},
 	"sources": {
 		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
@@ -161,11 +74,11 @@
 			]
 		},
 		"contracts/libraries/Helper.sol": {
-			"keccak256": "0xba3c435c1c7e944c4e42e928fb9fdcb0a236a4d4ca2ac26ce02ef02025f3de5f",
+			"keccak256": "0x9da57b18d8246710458551e98a12c90bd2c0edcf68bd545437807b4ac193a3c2",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://3d15def38e6d2e7adade7b1d4ef499c6bd8a51735bac07e48ed6d98158e6a816",
-				"dweb:/ipfs/QmRTqu9gDaKyYpxswPMkBZpajcxdNoJkPViR6A5KEGw876"
+				"bzz-raw://4ab6bae82be23028c141f582bfa772f539ef5ef465f056dd065c8c3bd8a9b35c",
+				"dweb:/ipfs/QmULpozo6dz8Xgs56UvKtX5EZPTCqHbaEJcJqAyRR6HGyK"
 			]
 		},
 		"contracts/libraries/SafeMathCopy.sol": {

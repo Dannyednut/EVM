@@ -150,6 +150,7 @@ library Helper {
     function sortPools(
         address[] memory pools,
         address[] memory tokens,
+        uint24[] memory fees,
         bool borrowTokenSmaller
     ) internal view returns (address[] memory, address[] memory) {
         if (pools.length > 2) return (pools, tokens);
@@ -170,14 +171,14 @@ library Helper {
             (price0, price1, t0, t1) = _getCrossProtocolPrices(pools, borrowTokenSmaller);
         }
 
-        // pools[0] = low price pool  (borrow here — tokenIn is cheap)
-        // pools[1] = high price pool (unwind here — tokenIn is expensive)
-        bool pool0Higher = !price0.lessThan(price1);
-        if (pool0Higher) (pools[0], pools[1]) = (pools[1], pools[0]);
+        bool pool0Lower = price0.lessThan(price1);
+        // pools[0] = high price pool  (sell here — tokenIn is expensive)
+        // pools[1] = low price pool (unwind here — tokenIn is cheap)
+        if (pool0Lower) (pools[0], pools[1], fees[0], fees[1]) = (pools[1], pools[0], fees[1], fees[0]);
 
         tokens[0] = t0;
         tokens[1] = t1;
-        tokens[2] = t0; // triangular: end token = start token
+        tokens[2] = tokens[0]; // triangular: end token = start token
 
         return (pools, tokens);
     }
@@ -193,11 +194,22 @@ library Helper {
     {
         t0 = IUniswapV2Pair(pools[0]).token0();
         t1 = IUniswapV2Pair(pools[0]).token1();
+
         (uint256 r00, uint256 r01,) = IUniswapV2Pair(pools[0]).getReserves();
         (uint256 r10, uint256 r11,) = IUniswapV2Pair(pools[1]).getReserves();
+
+        require(r00 > 0 && r01 > 0 && r10 > 0 && r11 > 0, "NO_LIQUIDITY");
+
+        // ALWAYS token1 per token0
+        Decimal.D256 memory p0_1per0 = Decimal.from(r01).div(r00);
+        Decimal.D256 memory p1_1per0 = Decimal.from(r11).div(r10);
+
+        Decimal.D256 memory p0_0per1 = Decimal.from(r00).div(r01);
+        Decimal.D256 memory p1_0per1 = Decimal.from(r10).div(r11);
+
         (price0, price1, t0, t1) = borrowTokenSmaller
-            ? (Decimal.from(r00).div(r01), Decimal.from(r10).div(r11), t0, t1)
-            : (Decimal.from(r01).div(r00), Decimal.from(r11).div(r10), t1, t0);
+            ? (p0_1per0, p1_1per0, t0, t1)
+            : (p0_0per1, p1_0per1, t1, t0);
     }
 
     function _getV3Prices(address[] memory pools, bool borrowTokenSmaller)
@@ -248,8 +260,8 @@ library Helper {
         } else {
             (uint112 r0, uint112 r1,) = IUniswapV2Pair(pool).getReserves();
             return borrowTokenSmaller
-                ? (uint256(r0) << 96) / uint256(r1)
-                : (uint256(r1) << 96) / uint256(r0);
+                ? (uint256(r1) << 96) / uint256(r0)
+                : (uint256(r0) << 96) / uint256(r1);
         }
     }
 
@@ -296,15 +308,15 @@ library Helper {
         uint8   mode
     ) internal pure returns (uint256 amount) {
         // Scale down to avoid overflow in quadratic (int256 safe math)
-        uint256 min1 = resInP0  < resOutP0 ? resInP0  : resOutP0;
-        uint256 min2 = resInP1  < resOutP1 ? resInP1  : resOutP1;
-        uint256 min  = min1 < min2 ? min1 : min2;
-        uint256 d    = _scalingFactor(min);
-
-        int256 a1 = int256(resInP0  / d);
-        int256 b1 = int256(resOutP0 / d);
-        int256 a2 = int256(resInP1  / d);
-        int256 b2 = int256(resOutP1 / d);
+        uint256 min1 = resInP0 < resOutP0 ? resInP0 : resOutP0;
+        uint256 min2 = resInP1 < resOutP1 ? resInP1 : resOutP1;
+        uint256 min = min1 < min2 ? min1 : min2;
+        uint256 d = _scalingFactor(min);
+        
+        int256 a1 = int256(resInP0 / d); 
+        int256 b1 = int256(resOutP0 / d); 
+        int256 a2 = int256(resInP1 / d);  
+        int256 b2 = int256(resOutP1 / d); 
 
         // gamma_i = (1e6 - fee_i), representing (1 - fee) scaled to 1e6
         int256 g0 = int256(uint256(1e6 - feeP0));

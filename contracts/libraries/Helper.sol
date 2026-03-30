@@ -308,15 +308,15 @@ library Helper {
         uint8   mode
     ) internal pure returns (uint256 amount) {
         // Scale down to avoid overflow in quadratic (int256 safe math)
-        uint256 min1 = resInP0 < resOutP0 ? resInP0 : resOutP0;
-        uint256 min2 = resInP1 < resOutP1 ? resInP1 : resOutP1;
-        uint256 min = min1 < min2 ? min1 : min2;
-        uint256 d = _scalingFactor(min);
-        
-        int256 a1 = int256(resInP0 / d); 
-        int256 b1 = int256(resOutP0 / d); 
-        int256 a2 = int256(resInP1 / d);  
-        int256 b2 = int256(resOutP1 / d); 
+        uint256 d_a = _scalingFactor(resInP0 < resOutP1 ? resInP0 : resOutP1);
+        uint256 d_b = _scalingFactor(resOutP0 < resInP1 ? resOutP0 : resInP1);
+
+        int256 a1 = int256(resInP0  / d_a);
+        int256 b1 = int256(resOutP0 / d_b);
+        int256 a2 = int256(resInP1  / d_b);
+        int256 b2 = int256(resOutP1 / d_a);
+
+        if (a1 <= 0 || b1 <= 0 || a2 <= 0 || b2 <= 0) return 0;
 
         // gamma_i = (1e6 - fee_i), representing (1 - fee) scaled to 1e6
         int256 g0 = int256(uint256(1e6 - feeP0));
@@ -335,7 +335,7 @@ library Helper {
         int256 x = (x1 > 0 && x1 < b2) ? x1 : x2;
         if (x <= 0 || x >= b2) return 0;
 
-        amount = uint256(x) * d;
+        amount = uint256(x) * d_a;
 
         // Mode 1: caller needs the intermediate token amount, not tokenIn amount
         if (mode == 1) amount = getAmountOutV2WithFee(amount, resInP0, resOutP0, feeP0);
@@ -401,7 +401,9 @@ library Helper {
         else if (min > 1e17) d = 1e13;
         else if (min > 1e16) d = 1e12;
         else if (min > 1e15) d = 1e11;
-        else                 d = 1e10;
+        else if (min > 1e10) d = 1e6;   // USDC-scale pools
+        else if (min > 1e6)  d = 1e2;
+        else                 d = 1;
     }
 
     // -------------------------------------------------------------------------

@@ -91,7 +91,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
     ///                      forceAave takes precedence over forceBalancer if both are true.
     ///                      If neither is true, borrows via a pool flash swap.
     function execute(ArbData calldata arb, bool forceAave, bool forceBalancer, uint256 validUntilBlock) external nonReentrant onlyOwner {
-        if (block.number <= validUntilBlock) revert Block();
+        if (block.number > validUntilBlock) revert Block();
         if (arb.tokens.length < 2) revert BadPath();
         if (arb.pools.length != arb.tokens.length - 1) revert BadPath();
         Helper._validatePoolTokens(arb.tokens, arb.pools);
@@ -101,7 +101,7 @@ contract ArbExec is Ownable, ReentrancyGuard {
         (arbMem, profit) = getProfit(arbMem);
         uint256 borrowAmt = arbMem.amountIn;
 
-        if (profit < arbMem.minProfit) revert NoProfit();
+        if (profit < arbMem.minProfit || profit == 0) revert NoProfit();
         if (borrowAmt == 0) revert AmountRequired();
         if (arbMem.tokens[arbMem.tokens.length - 1] != arbMem.tokenIn) revert BadPath();
         uint256 startBalance = _balanceOf(arbMem.tokenIn, address(this));
@@ -187,11 +187,11 @@ contract ArbExec is Ownable, ReentrancyGuard {
 
         address[] memory a = new address[](1); a[0] = arb.tokenIn;
         uint256[] memory am = new uint256[](1); am[0] = amt;
-        try IBalancerVault(BALANCER_VAULT).flashLoan(address(this), a, am, payload) {
-        } catch {
-            _expectedCallback = address(0);
-            revert("Balancer FL failed");
-        }
+        IBalancerVault(BALANCER_VAULT).flashLoan(address(this), a, am, payload); //{
+        // } catch {
+        //     _expectedCallback = address(0);
+        //     revert("Balancer FL failed");
+        // }
 
         emit FLA(arb.tokenIn, amt);
     }

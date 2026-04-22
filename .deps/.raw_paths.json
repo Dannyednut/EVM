@@ -16,5 +16,19 @@
   "@uniswap/v3-core@1.0.1/contracts/interfaces/pool/IUniswapV3PoolActions.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/interfaces/pool/IUniswapV3PoolActions.sol",
   "@uniswap/v3-core@1.0.1/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol",
   "@uniswap/v3-core@1.0.1/contracts/interfaces/pool/IUniswapV3PoolEvents.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/interfaces/pool/IUniswapV3PoolEvents.sol",
-  "@uniswap/v3-core@1.0.1/contracts/libraries/FixedPoint96.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/libraries/FixedPoint96.sol"
+  "@uniswap/v3-core@1.0.1/contracts/libraries/FixedPoint96.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/libraries/FixedPoint96.sol",
+  "@openzeppelin/contracts@5.6.1/token/ERC20/SafeERC20.sol": ".deps/npm/@openzeppelin/contracts@5.6.1/token/ERC20/SafeERC20.sol",
+  "@uniswap/v3-core@1.0.1/contracts/interfaces/callback/IUniswapV3FlashCallback.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/interfaces/callback/IUniswapV3FlashCallback.sol",
+  "@uniswap/v3-core@1.0.1/contracts/libraries/LowGasSafeMath.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/libraries/LowGasSafeMath.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/libraries/PoolAddress.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/libraries/PoolAddress.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/base/PeripheryImmutableState.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/base/PeripheryImmutableState.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/interfaces/IPeripheryImmutableState.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/interfaces/IPeripheryImmutableState.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/libraries/CallbackValidation.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/libraries/CallbackValidation.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/libraries/TransferHelper.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/libraries/TransferHelper.sol",
+  "@openzeppelin/contracts@3.4.2-solc-0.7/token/ERC20/IERC20.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/token/ERC20/IERC20.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/interfaces/ISwapRouter.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/interfaces/ISwapRouter.sol",
+  "@uniswap/v3-core@1.0.1/contracts/interfaces/callback/IUniswapV3SwapCallback.sol": ".deps/npm/@uniswap/v3-core@1.0.1/contracts/interfaces/callback/IUniswapV3SwapCallback.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/base/PeripheryPayments.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/base/PeripheryPayments.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/interfaces/IPeripheryPayments.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/interfaces/IPeripheryPayments.sol",
+  "@uniswap/v3-periphery@1.4.4/contracts/interfaces/external/IWETH9.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/interfaces/external/IWETH9.sol"
 }

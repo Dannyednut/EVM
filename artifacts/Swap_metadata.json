@@ -1,0 +1,173 @@
+{
+	"compiler": {
+		"version": "0.8.21+commit.d9974bed"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "pool",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenIn",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenOut",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "swap",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "out",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "int256",
+						"name": "a0",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "a1",
+						"type": "int256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "uniswapV3SwapCallback",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Swap.sol": "Swap"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": [],
+		"viaIR": true
+	},
+	"sources": {
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0x74ed01eb66b923d0d0cfe3be84604ac04b76482a55f9dd655e1ef4d367f95bc2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5282825a626cfe924e504274b864a652b0023591fa66f06a067b25b51ba9b303",
+				"dweb:/ipfs/QmeCfPykghhMc81VJTrHTC7sF6CRvaA1FXVq2pJhwYp1dV"
+			]
+		},
+		"contracts/Swap.sol": {
+			"keccak256": "0xef2c6486d4425a209f70694f1ce98bd14ee5272842552463e13fb51ff3ba502f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://403b5f7869588f2b261bed64c153ecb93b09abba5f4407684bc7394965468bab",
+				"dweb:/ipfs/QmUbTegW6CLPivj3N9adGKCKfsQjnEHQndRQjtECbDkRRL"
+			]
+		},
+		"contracts/interfaces/IQuoter.sol": {
+			"keccak256": "0xa82e8c69928b8f2ed18dc4e2e78bc423c1b4cd485a6acc8ef17cd59e6478a6c2",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://b6293247d260411ffafd3f157792e3dccd9e5a754465eb717845c57ab2ff8277",
+				"dweb:/ipfs/QmSPz9uSKRVFGpbpsJTqacXcbXLLka2fHKmXvGeu5stVS8"
+			]
+		},
+		"contracts/interfaces/IUniswapV2Pair.sol": {
+			"keccak256": "0x6593d3e0444a03aabacb705c16faa5a6e345513f0a6c6a8f159c5e214bb7b385",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://4e13b8a298f34db5a1ffcb0e34c517798ff7e23328bc41553281de74d798062d",
+				"dweb:/ipfs/QmRPBtk5wnauyJXBDE7SQSMbV1zcDR2ZoM7iBumfZTee76"
+			]
+		},
+		"contracts/interfaces/IUniswapV3Pool.sol": {
+			"keccak256": "0xed93f9446db1ff67b85e9fb1d11b82bce9eed18f8d3c63a8ca097950bea0470c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2b91f519847c4f2adbf5eb3b11f661ab99961e6425bdab29125a2bafc2177861",
+				"dweb:/ipfs/QmQFPBbtMDg5joWu9KsSLt1B7ZfPSgphkquE78L8fLghhJ"
+			]
+		},
+		"contracts/interfaces/IWETH.sol": {
+			"keccak256": "0x69b0a5695f78a2d120ee770c924eeb75db0f8bedc7f191d79576891eea29432e",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://9eaf27325a8dad0a613426352c6142ffb55c49f23266e31a87f6e90afa49944d",
+				"dweb:/ipfs/QmXFkgcUXERGcJmxwF1abBt4fZyw3zKEaU7XeGPLuDpNKQ"
+			]
+		},
+		"contracts/libraries/Decimal.sol": {
+			"keccak256": "0x3214ec23db268262846f8fe35d44f88a7c772f4e13ca6ea94b23c8114f9bda97",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://19ce3cca2df0da4ca43a3169b41f23a11ead5a910c900bbba7d7eaed4c50cada",
+				"dweb:/ipfs/QmbAHZySkkpr3FvEBYSyXb77SyBjZxorgcfXq5uynw9q6C"
+			]
+		},
+		"contracts/libraries/Helper_v2.sol": {
+			"keccak256": "0x735ce173414cb63db561d39f6f6022454d99568fe6b7e23c434e233579d95cb4",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://3ee4fa192ee5525a97484a50ebbfd12c987ff68157989fdc4733a7d2b75ce3aa",
+				"dweb:/ipfs/QmbdF4QG2tRUu7J44p9AZebUdv6CyFWKizPvtdZk1aBtqd"
+			]
+		},
+		"contracts/libraries/SafeMathCopy.sol": {
+			"keccak256": "0x3bf96f65037e8d46631354034f41317b8d1fda916b9c6ca3f4960328d836e298",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e56b1f31863ef8196397511b358d219343433fa3fdf480fa2993f6621e29a28e",
+				"dweb:/ipfs/Qmb6Z7apFEx8aEm8474xiDgD1vhk5CJW5EvD3Qzdyf6njw"
+			]
+		}
+	},
+	"version": 1
+}

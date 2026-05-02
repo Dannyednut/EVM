@@ -19,11 +19,6 @@
 					},
 					{
 						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
 						"name": "_b",
 						"type": "address"
 					}
@@ -102,6 +97,25 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "successful",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "failed",
+						"type": "uint256"
+					}
+				],
+				"name": "BATCH",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": true,
 						"internalType": "address",
 						"name": "profitToken",
@@ -115,63 +129,6 @@
 					}
 				],
 				"name": "DONE",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "t",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "a",
-						"type": "uint256"
-					}
-				],
-				"name": "FLA",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "p",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "a",
-						"type": "uint256"
-					}
-				],
-				"name": "FSV2",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "p",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "a",
-						"type": "uint256"
-					}
-				],
-				"name": "FSV3",
 				"type": "event"
 			},
 			{
@@ -196,19 +153,6 @@
 			{
 				"stateMutability": "nonpayable",
 				"type": "fallback"
-			},
-			{
-				"inputs": [],
-				"name": "AAVE_POOL",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -284,11 +228,6 @@
 								"type": "address"
 							},
 							{
-								"internalType": "address",
-								"name": "borrowPool",
-								"type": "address"
-							},
-							{
 								"internalType": "uint8",
 								"name": "mode",
 								"type": "uint8"
@@ -297,11 +236,6 @@
 						"internalType": "struct ArbData",
 						"name": "arb",
 						"type": "tuple"
-					},
-					{
-						"internalType": "bool",
-						"name": "forceAave",
-						"type": "bool"
 					},
 					{
 						"internalType": "bool",
@@ -322,37 +256,22 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address[]",
-						"name": "assets",
-						"type": "address[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "amounts",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "premiums",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "address",
-						"name": "initiator",
-						"type": "address"
-					},
-					{
-						"internalType": "bytes",
-						"name": "params",
-						"type": "bytes"
+						"internalType": "bytes[]",
+						"name": "calls",
+						"type": "bytes[]"
 					}
 				],
-				"name": "executeOperation",
+				"name": "executeBatch",
 				"outputs": [
 					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
+						"internalType": "uint256",
+						"name": "successful",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "failed",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -390,11 +309,6 @@
 							{
 								"internalType": "address",
 								"name": "tokenIn",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "borrowPool",
 								"type": "address"
 							},
 							{
@@ -440,11 +354,6 @@
 							{
 								"internalType": "address",
 								"name": "tokenIn",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "borrowPool",
 								"type": "address"
 							},
 							{
@@ -558,29 +467,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "f0",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "f1",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
-					}
-				],
-				"name": "uniswapV3FlashCallback",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "int256",
 						"name": "a0",
 						"type": "int256"
@@ -646,31 +532,16 @@
 			"methods": {
 				"constructor": {
 					"params": {
-						"_a": "Aave V3 lending pool address, or address(0) to disable Aave flash loans.",
 						"_b": "Balancer Vault address, or address(0) to disable Balancer flash loans.",
 						"_q": "View-only Quoter address for simulating V3 swap outputs.",
 						"_w": "WETH token address used for unwrapping profits."
 					}
 				},
-				"execute((uint256,uint256,address[],address[],uint24[],address,address,uint8),bool,bool,uint256)": {
+				"execute((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256)": {
 					"details": "Validates the path, determines the borrow amount if not supplied, then      initiates a flash loan or flash swap from the preferred source.      Use the `ad` return value from getProfit() as the `arb` argument here      to ensure the borrow amount and sorted pools are consistent with the simulation.",
 					"params": {
 						"arb": "Arbitrage parameters including token path, pools, fees, and constraints.",
-						"forceAave": "If true, forces borrowing via Aave flash loan (requires AAVE_POOL set).",
-						"forceBalancer": "If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).                      forceAave takes precedence over forceBalancer if both are true.                      If neither is true, borrows via a pool flash swap."
-					}
-				},
-				"executeOperation(address[],uint256[],uint256[],address,bytes)": {
-					"details": "Called by the Aave pool after funds are transferred to this contract.      Executes the arb trade, then repays the loan plus Aave's premium.      Reverts if caller is not the expected Aave pool or initiator is not this contract.",
-					"params": {
-						"amounts": "Amounts borrowed (single element array).",
-						"assets": "Token addresses borrowed (single element array).",
-						"initiator": "Must equal address(this) — guards against third-party flash loan injection.",
-						"params": "ABI-encoded (ArbData, borrowAmt, startBalance).",
-						"premiums": "Aave fees owed on top of the borrowed amounts."
-					},
-					"returns": {
-						"_0": "True on success, as required by the Aave interface."
+						"forceBalancer": "If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).                      If not true, borrows via a pool flash swap."
 					}
 				},
 				"owner()": {
@@ -691,11 +562,11 @@
 				"constructor": {
 					"notice": "Deploys the contract and sets immutable protocol addresses."
 				},
-				"execute((uint256,uint256,address[],address[],uint24[],address,address,uint8),bool,bool,uint256)": {
+				"execute((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256)": {
 					"notice": "Entry point for executing an arbitrage opportunity."
 				},
-				"executeOperation(address[],uint256[],uint256[],address,bytes)": {
-					"notice": "Aave flash loan callback."
+				"executeBatch(bytes[])": {
+					"notice": "Executes multiple arbs. Continues on failure.         Forwards all DONE events from successful executions."
 				}
 			},
 			"version": 1
@@ -703,7 +574,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Exec.sol": "ArbExec"
+			"contracts/ArbExec.sol": "ArbExec"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -758,20 +629,12 @@
 				"dweb:/ipfs/QmarDJ5hZEgBtCmmrVzEZWjub9769eD686jmzb2XpSU1cM"
 			]
 		},
-		"contracts/Exec.sol": {
-			"keccak256": "0x491c00e7bd505917e527fa0f2bb7427a054fe2c2c70c71e63950fa137d8c0f04",
+		"contracts/ArbExec.sol": {
+			"keccak256": "0x51b7f821f48c30bf1e74ad7a8bb99136fbea644d8234843bfc3275f27ecf01fa",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9bc3fdc2514b0e1d5b196f2b7382be3ba95ba458fb9140aa3a9e0af9986d5053",
-				"dweb:/ipfs/QmQtAwz5DXt7rHvuHmhWfexhphREx5mhouHRVmVVF9uJxN"
-			]
-		},
-		"contracts/interfaces/IAavePool.sol": {
-			"keccak256": "0xe27eba9d547b9ea5100ca02c716e20ef5b8eac175b4fc20c3fbc181f9b1405c3",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://9f03e7a63f548a008e4b4a064ac98892f19fcd95cf9ae7648392b5c6c85d9514",
-				"dweb:/ipfs/QmXbjt8uGXtnqT8tSHgAFiMuGJENDSBcHh33DTh7Ed7vue"
+				"bzz-raw://cad44f5ffab937ccf4913ed20d7705add4c4c444ee4181b2565ac130d41d8a84",
+				"dweb:/ipfs/Qmck1ccHVD4QnQpTv69a3QURsFRfbT21A5QEvpWMJbad8q"
 			]
 		},
 		"contracts/interfaces/IBalancerVault.sol": {
@@ -822,12 +685,12 @@
 				"dweb:/ipfs/QmbAHZySkkpr3FvEBYSyXb77SyBjZxorgcfXq5uynw9q6C"
 			]
 		},
-		"contracts/libraries/Helper_v2.sol": {
-			"keccak256": "0x735ce173414cb63db561d39f6f6022454d99568fe6b7e23c434e233579d95cb4",
+		"contracts/libraries/Helper.sol": {
+			"keccak256": "0x7b370f478e8b8aa21a309ed837e7ad76021e7cb2317a9d8e68701b0932bbeb2c",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://3ee4fa192ee5525a97484a50ebbfd12c987ff68157989fdc4733a7d2b75ce3aa",
-				"dweb:/ipfs/QmbdF4QG2tRUu7J44p9AZebUdv6CyFWKizPvtdZk1aBtqd"
+				"bzz-raw://863bceeabae31ef0fa33d5195f11f9157f984c98aa7bf4857bbcb303e947ca2b",
+				"dweb:/ipfs/QmWbfMKazJo9jpxMqSRX6jcNqs97ihNTqxY2tCPn5T3bST"
 			]
 		},
 		"contracts/libraries/SafeMathCopy.sol": {

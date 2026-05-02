@@ -70,8 +70,11 @@
         "burstAllowance": 4
       },
       "fileWritePermissions": {
-        "mode": "ask",
-        "allowedFiles": []
+        "mode": "allow-specific",
+        "allowedFiles": [
+          "contracts/Swap.sol"
+        ],
+        "lastPrompted": "2026-05-02T03:24:55.016Z"
       }
     },
     "validation": {

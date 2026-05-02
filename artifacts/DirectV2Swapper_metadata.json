@@ -9,35 +9,50 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "sender",
+						"name": "pair",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "recipient",
+						"name": "tokenIn",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "amountIn",
 						"type": "uint256"
-					}
-				],
-				"name": "transferFrom",
-				"outputs": [
+					},
 					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
+						"internalType": "uint256",
+						"name": "amountOutMin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
 					}
 				],
+				"name": "swapDirect",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"swapDirect(address,address,uint256,uint256,address)": {
+					"details": "Swaps tokens directly via the pair contract, bypassing the router.",
+					"params": {
+						"amountIn": "The exact amount of tokenIn to swap.",
+						"amountOutMin": "The minimum acceptable amount of the output token.",
+						"pair": "The address of the Uniswap V2 pair (pool).",
+						"to": "The address to receive the output tokens.",
+						"tokenIn": "The address of the token you are swapping."
+					}
+				}
+			},
 			"version": 1
 		},
 		"userdoc": {
@@ -48,7 +63,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Swap.sol": "IERC20"
+			"contracts/Swap.sol": "DirectV2Swapper"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},

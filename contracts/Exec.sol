@@ -187,11 +187,11 @@ contract ArbExec is Ownable, ReentrancyGuard {
 
         address[] memory a = new address[](1); a[0] = arb.tokenIn;
         uint256[] memory am = new uint256[](1); am[0] = amt;
-        IBalancerVault(BALANCER_VAULT).flashLoan(address(this), a, am, payload); //{
-        // } catch {
-        //     _expectedCallback = address(0);
-        //     revert("Balancer FL failed");
-        // }
+        try IBalancerVault(BALANCER_VAULT).flashLoan(address(this), a, am, payload) {
+        } catch {
+            _expectedCallback = address(0);
+            revert("Balancer FL failed");
+        }
 
         emit FLA(arb.tokenIn, amt);
     }

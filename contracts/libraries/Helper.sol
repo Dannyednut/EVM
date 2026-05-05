@@ -143,6 +143,15 @@ library Helper {
         return size > 0;
     }
 
+    // function getPoolTokens(address pool)
+    //     internal view
+    //     returns (address t0, address t1, bool isV3)
+    // {
+    //     isV3 = _isUniswapV3(pool);
+    //     t0   = isV3 ? IUniswapV3Pool(pool).token0() : IUniswapV2Pair(pool).token0();
+    //     t1   = isV3 ? IUniswapV3Pool(pool).token1() : IUniswapV2Pair(pool).token1();
+    // }
+
     // -------------------------------------------------------------------------
     // Reserve helpers
     // -------------------------------------------------------------------------
@@ -290,7 +299,7 @@ library Helper {
     {
         bool isV3_0 = _isUniswapV3(pools[0]);
         t0 = isV3_0 ? _token0(pools[0]) : _token0(pools[0]);
-        t1 = isV3_0 ? _token0(pools[0]) : _token0(pools[0]);
+        t1 = isV3_0 ? _token1(pools[0]) : _token1(pools[0]);
 
         uint256 p0Q96 = _getPoolPriceQ96(pools[0], borrowTokenSmaller);
         uint256 p1Q96 = _getPoolPriceQ96(pools[1], borrowTokenSmaller);

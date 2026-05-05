@@ -203,7 +203,9 @@ contract ArbExec is Ownable, ReentrancyGuard {
             bool z = (arb.tokenIn == Helper._token0(arb.pools[0]));
             uint160 sqrtLimit = z ? 4295128740 : 1461446703485210103287273052203988822378723970341;
             // Prepend mode discriminator (2) to payload for callback dispatch
-            bytes memory data = abi.encodePacked(uint8(2), payload);
+            // bytes memory data = abi.encodePacked(uint8(2), payload);
+            (ArbData memory ad, uint256 b, uint256 c) = abi.decode(payload, (ArbData, uint256, uint256));
+            bytes memory data = abi.encode(uint8(2), ad, b, c);
             IUniswapV3Pool(arb.pools[0]).swap(address(this), z, -int256(borrowAmt), sqrtLimit, data);
             
             return;
@@ -279,7 +281,8 @@ contract ArbExec is Ownable, ReentrancyGuard {
         _expectedCallback = address(0);
         // data = uint8(2) ++ abi.encode(ArbData, borrowAmt, startBalance)
         // Skip the first byte (mode discriminator) and decode the rest
-        (ArbData memory arb,, uint256 startBalance) = abi.decode(data[1:], (ArbData, uint256, uint256));
+        // (ArbData memory arb,, uint256 startBalance) = abi.decode(data[1:], (ArbData, uint256, uint256));
+        (, ArbData memory arb,, uint256 startBalance) = abi.decode(data, (uint8, ArbData, uint256, uint256));
 
         bool borrowedIs0 = a0 < 0;
         uint256 borrowed = borrowedIs0 ? uint256(-a0) : uint256(-a1);        address t0 = Helper._token0(msg.sender);

@@ -1,0 +1,319 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_weth",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidPool",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "got",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "min",
+						"type": "uint256"
+					}
+				],
+				"name": "SlippageExceeded",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ZeroAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ZeroAmount",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "pool",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "tokenIn",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "tokenOut",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "Swapped",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "WETH",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "pool",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenIn",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenOut",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minAmountOut",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "swap",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "pool",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenOut",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minAmountOut",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "swapETH",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "int256",
+						"name": "amount0Delta",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount1Delta",
+						"type": "int256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "uniswapV3SwapCallback",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"swap(address,address,address,uint256,uint256,address)": {
+					"params": {
+						"amountIn": "Exact amount of tokenIn to pull from caller.",
+						"minAmountOut": "Minimum tokenOut to accept (slippage guard). 0 = no guard.",
+						"pool": "V2 pair or V3 pool address.",
+						"to": "Recipient of tokenOut.",
+						"tokenIn": "Token to sell. Caller must have approved this contract.",
+						"tokenOut": "Token to receive."
+					},
+					"returns": {
+						"amountOut": "  Actual tokenOut delivered to `to`."
+					}
+				},
+				"swapETH(address,address,uint256,address)": {
+					"params": {
+						"minAmountOut": "Minimum tokenOut to accept (slippage guard). 0 = no guard.",
+						"pool": "V2 pair or V3 pool address containing WETH.",
+						"to": "Recipient of tokenOut.",
+						"tokenOut": "Token to receive."
+					},
+					"returns": {
+						"amountOut": "  Actual tokenOut delivered to `to`."
+					}
+				},
+				"uniswapV3SwapCallback(int256,int256,bytes)": {
+					"details": "The pool calls this after sending tokenOut to the recipient.         We owe the pool the positive delta (tokenIn side)."
+				}
+			},
+			"stateVariables": {
+				"_expectedV3Pool": {
+					"details": "Set transiently around V3 swap calls to authenticate the callback."
+				}
+			},
+			"title": "DirectSwap",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"swap(address,address,address,uint256,uint256,address)": {
+					"notice": "Swap ERC20 → ERC20 (or WETH) through a single V2/V3 pool."
+				},
+				"swapETH(address,address,uint256,address)": {
+					"notice": "Swap native ETH → ERC20 through a single V2/V3 pool.         Pool must contain WETH. ETH is wrapped automatically."
+				},
+				"uniswapV3SwapCallback(int256,int256,bytes)": {
+					"notice": "Uniswap V3 swap callback — called by the pool to collect tokenIn."
+				}
+			},
+			"notice": "Pull tokenIn (ETH or ERC20) from msg.sender and execute a single         hop swap through a Uniswap V2 pair or V3 pool, delivering tokenOut         to the specified recipient.         ETH callers:   send ETH via swapETH() — no approval needed.                        ETH is wrapped to WETH internally before swapping.         ERC20 callers: approve this contract for at least amountIn,                        then call swap().",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Swap.sol": "DirectSwap"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": [],
+		"viaIR": true
+	},
+	"sources": {
+		"contracts/Swap.sol": {
+			"keccak256": "0x2101725ab9d14ef3b492d479c2f4743397c838034d712fe9e26a73b696de28a1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://98944322cccf40769d7e5603d511118067204ddb23b70cf2b6d0c315ced5caa0",
+				"dweb:/ipfs/QmTM35JtWWjRYhaJFDfZJk6CPZQb1MKXcdsCcDnUnmsdXX"
+			]
+		},
+		"contracts/interfaces/IUniswapV2Pair.sol": {
+			"keccak256": "0x6593d3e0444a03aabacb705c16faa5a6e345513f0a6c6a8f159c5e214bb7b385",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://4e13b8a298f34db5a1ffcb0e34c517798ff7e23328bc41553281de74d798062d",
+				"dweb:/ipfs/QmRPBtk5wnauyJXBDE7SQSMbV1zcDR2ZoM7iBumfZTee76"
+			]
+		},
+		"contracts/interfaces/IUniswapV3Pool.sol": {
+			"keccak256": "0xed93f9446db1ff67b85e9fb1d11b82bce9eed18f8d3c63a8ca097950bea0470c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2b91f519847c4f2adbf5eb3b11f661ab99961e6425bdab29125a2bafc2177861",
+				"dweb:/ipfs/QmQFPBbtMDg5joWu9KsSLt1B7ZfPSgphkquE78L8fLghhJ"
+			]
+		},
+		"contracts/interfaces/IWETH.sol": {
+			"keccak256": "0x69b0a5695f78a2d120ee770c924eeb75db0f8bedc7f191d79576891eea29432e",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://9eaf27325a8dad0a613426352c6142ffb55c49f23266e31a87f6e90afa49944d",
+				"dweb:/ipfs/QmXFkgcUXERGcJmxwF1abBt4fZyw3zKEaU7XeGPLuDpNKQ"
+			]
+		}
+	},
+	"version": 1
+}

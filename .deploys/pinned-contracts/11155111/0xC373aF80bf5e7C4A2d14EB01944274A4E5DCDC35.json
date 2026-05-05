@@ -1,7 +1,7 @@
 {
   "name": "ArbExec",
-  "address": "0xfa658A9AddA3d68087e1ED96600cD1021Afd6073",
-  "timestamp": 1774866122779,
+  "address": "0xC373aF80bf5e7C4A2d14EB01944274A4E5DCDC35",
+  "timestamp": 1777908658346,
   "abi": [
     {
       "inputs": [
@@ -17,17 +17,47 @@
         },
         {
           "internalType": "address",
-          "name": "_a",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
           "name": "_b",
           "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AmountRequired",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Auth",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BadPath",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Block",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InsufficientBalance",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ModePathMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoProfit",
+      "type": "error"
     },
     {
       "inputs": [
@@ -57,15 +87,28 @@
       "type": "error"
     },
     {
+      "inputs": [],
+      "name": "ZeroAddress",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
       "inputs": [
         {
-          "internalType": "address",
-          "name": "token",
-          "type": "address"
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "successful",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "failed",
+          "type": "uint256"
         }
       ],
-      "name": "SafeERC20FailedOperation",
-      "type": "error"
+      "name": "BATCH",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -92,63 +135,6 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "t",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "a",
-          "type": "uint256"
-        }
-      ],
-      "name": "FLA",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "p",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "a",
-          "type": "uint256"
-        }
-      ],
-      "name": "FSV2",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "p",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "a",
-          "type": "uint256"
-        }
-      ],
-      "name": "FSV3",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
           "name": "previousOwner",
           "type": "address"
         },
@@ -165,19 +151,6 @@
     {
       "stateMutability": "nonpayable",
       "type": "fallback"
-    },
-    {
-      "inputs": [],
-      "name": "AAVE_POOL",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
     },
     {
       "inputs": [],
@@ -223,6 +196,16 @@
         {
           "components": [
             {
+              "internalType": "uint256",
+              "name": "amountIn",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minProfit",
+              "type": "uint256"
+            },
+            {
               "internalType": "address[]",
               "name": "tokens",
               "type": "address[]"
@@ -233,29 +216,14 @@
               "type": "address[]"
             },
             {
-              "internalType": "uint256",
-              "name": "amountIn",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "tokenIn",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "borrowPool",
-              "type": "address"
-            },
-            {
               "internalType": "uint24[]",
               "name": "fees",
               "type": "uint24[]"
             },
             {
-              "internalType": "uint256",
-              "name": "minProfit",
-              "type": "uint256"
+              "internalType": "address",
+              "name": "tokenIn",
+              "type": "address"
             },
             {
               "internalType": "uint8",
@@ -269,13 +237,13 @@
         },
         {
           "internalType": "bool",
-          "name": "forceAave",
+          "name": "forceBalancer",
           "type": "bool"
         },
         {
-          "internalType": "bool",
-          "name": "forceBalancer",
-          "type": "bool"
+          "internalType": "uint256",
+          "name": "validUntilBlock",
+          "type": "uint256"
         }
       ],
       "name": "execute",
@@ -286,37 +254,22 @@
     {
       "inputs": [
         {
-          "internalType": "address[]",
-          "name": "assets",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "amounts",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "premiums",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "address",
-          "name": "initiator",
-          "type": "address"
-        },
-        {
-          "internalType": "bytes",
-          "name": "params",
-          "type": "bytes"
+          "internalType": "bytes[]",
+          "name": "calls",
+          "type": "bytes[]"
         }
       ],
-      "name": "executeOperation",
+      "name": "executeBatch",
       "outputs": [
         {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
+          "internalType": "uint256",
+          "name": "successful",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "failed",
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -326,6 +279,16 @@
       "inputs": [
         {
           "components": [
+            {
+              "internalType": "uint256",
+              "name": "amountIn",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minProfit",
+              "type": "uint256"
+            },
             {
               "internalType": "address[]",
               "name": "tokens",
@@ -337,29 +300,14 @@
               "type": "address[]"
             },
             {
-              "internalType": "uint256",
-              "name": "amountIn",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "tokenIn",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "borrowPool",
-              "type": "address"
-            },
-            {
               "internalType": "uint24[]",
               "name": "fees",
               "type": "uint24[]"
             },
             {
-              "internalType": "uint256",
-              "name": "minProfit",
-              "type": "uint256"
+              "internalType": "address",
+              "name": "tokenIn",
+              "type": "address"
             },
             {
               "internalType": "uint8",
@@ -377,6 +325,16 @@
         {
           "components": [
             {
+              "internalType": "uint256",
+              "name": "amountIn",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minProfit",
+              "type": "uint256"
+            },
+            {
               "internalType": "address[]",
               "name": "tokens",
               "type": "address[]"
@@ -387,29 +345,14 @@
               "type": "address[]"
             },
             {
-              "internalType": "uint256",
-              "name": "amountIn",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "tokenIn",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "borrowPool",
-              "type": "address"
-            },
-            {
               "internalType": "uint24[]",
               "name": "fees",
               "type": "uint24[]"
             },
             {
-              "internalType": "uint256",
-              "name": "minProfit",
-              "type": "uint256"
+              "internalType": "address",
+              "name": "tokenIn",
+              "type": "address"
             },
             {
               "internalType": "uint8",
@@ -522,29 +465,6 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "f0",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "f1",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "data",
-          "type": "bytes"
-        }
-      ],
-      "name": "uniswapV3FlashCallback",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "int256",
           "name": "a0",
           "type": "int256"
@@ -588,6 +508,6 @@
       "type": "receive"
     }
   ],
-  "filePath": "EVM-1774865216341/contracts/ArbExec.sol",
-  "pinnedAt": 1774866643252
+  "filePath": "EVM-1777686061318/contracts/ArbExec.sol",
+  "pinnedAt": 1777908661651
 }

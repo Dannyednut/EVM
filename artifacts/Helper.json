@@ -22,18 +22,18 @@
 			"functionDebugData": {},
 			"generatedSources": [],
 			"linkReferences": {},
-			"object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122004f2e76217cf59e5e4396d4daa08401b8c7ee1c616c08fa1e556be6d5ea2836e64736f6c63430008140033",
-			"opcodes": "PUSH1 0x80 DUP1 PUSH1 0x40 MSTORE CALLVALUE PUSH1 0x17 JUMPI PUSH1 0x39 SWAP1 DUP2 PUSH1 0x1C DUP3 CODECOPY ADDRESS DUP2 POP POP RETURN JUMPDEST PUSH0 DUP1 REVERT INVALID PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DIV CALLCODE 0xE7 PUSH3 0x17CF59 0xE5 0xE4 CODECOPY PUSH14 0x4DAA08401B8C7EE1C616C08FA1E5 JUMP 0xBE PUSH14 0x5EA2836E64736F6C634300081400 CALLER ",
-			"sourceMap": "283:17717:5:-:0;;;;;;;;;;;;;;;;;;;;;"
+			"object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122088a3b23e9b24cd1731917519317dd3f02b2753576b828397012928c0b5d7875a64736f6c63430008140033",
+			"opcodes": "PUSH1 0x80 DUP1 PUSH1 0x40 MSTORE CALLVALUE PUSH1 0x17 JUMPI PUSH1 0x39 SWAP1 DUP2 PUSH1 0x1C DUP3 CODECOPY ADDRESS DUP2 POP POP RETURN JUMPDEST PUSH0 DUP1 REVERT INVALID PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DUP9 LOG3 0xB2 RETURNDATACOPY SWAP12 0x24 0xCD OR BALANCE SWAP2 PUSH22 0x19317DD3F02B2753576B828397012928C0B5D7875A64 PUSH20 0x6F6C634300081400330000000000000000000000 ",
+			"sourceMap": "283:19875:5:-:0;;;;;;;;;;;;;;;;;;;;;"
 		},
 		"deployedBytecode": {
 			"functionDebugData": {},
 			"generatedSources": [],
 			"immutableReferences": {},
 			"linkReferences": {},
-			"object": "5f80fdfea264697066735822122004f2e76217cf59e5e4396d4daa08401b8c7ee1c616c08fa1e556be6d5ea2836e64736f6c63430008140033",
-			"opcodes": "PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DIV CALLCODE 0xE7 PUSH3 0x17CF59 0xE5 0xE4 CODECOPY PUSH14 0x4DAA08401B8C7EE1C616C08FA1E5 JUMP 0xBE PUSH14 0x5EA2836E64736F6C634300081400 CALLER ",
-			"sourceMap": "283:17717:5:-:0;;"
+			"object": "5f80fdfea264697066735822122088a3b23e9b24cd1731917519317dd3f02b2753576b828397012928c0b5d7875a64736f6c63430008140033",
+			"opcodes": "PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DUP9 LOG3 0xB2 RETURNDATACOPY SWAP12 0x24 0xCD OR BALANCE SWAP2 PUSH22 0x19317DD3F02B2753576B828397012928C0B5D7875A64 PUSH20 0x6F6C634300081400330000000000000000000000 ",
+			"sourceMap": "283:19875:5:-:0;;"
 		},
 		"gasEstimates": {
 			"creation": {
@@ -42,6 +42,7 @@
 				"totalCost": "infinite"
 			},
 			"internal": {
+				"_balanceOf(address,address)": "infinite",
 				"_getCrossProtocolPrices(address[] memory,bool)": "infinite",
 				"_getOrderedReserves(address,address)": "infinite",
 				"_getPoolPriceQ96(address,bool)": "infinite",
@@ -50,8 +51,11 @@
 				"_getV3Prices(address[] memory,bool)": "infinite",
 				"_isContract(address)": "infinite",
 				"_isUniswapV3(address)": "infinite",
+				"_safeTransfer(address,address,uint256)": "infinite",
 				"_scalingFactor(uint256)": "infinite",
 				"_solveQuadratic(int256,int256,int256)": "infinite",
+				"_token0(address)": "infinite",
+				"_token1(address)": "infinite",
 				"_validatePoolTokens(address[] memory,address[] memory)": "infinite",
 				"calcOptimalBorrow(address[] memory,address[] memory,uint24[] memory,uint8)": "infinite",
 				"calcOptimalV2Borrow(uint256,uint256,uint256,uint256,uint24,uint24,uint8)": "infinite",
@@ -60,11 +64,9 @@
 				"getAmountOutV2(uint256,uint256,uint256)": "infinite",
 				"getAmountOutV2WithFee(uint256,uint256,uint256,uint24)": "infinite",
 				"getEffectiveReservesV3(address)": "infinite",
-				"getPoolTokens(address)": "infinite",
 				"getReservesV2(address)": "infinite",
 				"sortPools(address[] memory,address[] memory,uint24[] memory,bool)": "infinite",
-				"sqrt(uint256)": "infinite",
-				"uint2str(uint256)": "infinite"
+				"sqrt(uint256)": "infinite"
 			}
 		},
 		"methodIdentifiers": {}

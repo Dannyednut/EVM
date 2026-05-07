@@ -22,18 +22,18 @@
 			"functionDebugData": {},
 			"generatedSources": [],
 			"linkReferences": {},
-			"object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122088a3b23e9b24cd1731917519317dd3f02b2753576b828397012928c0b5d7875a64736f6c63430008140033",
-			"opcodes": "PUSH1 0x80 DUP1 PUSH1 0x40 MSTORE CALLVALUE PUSH1 0x17 JUMPI PUSH1 0x39 SWAP1 DUP2 PUSH1 0x1C DUP3 CODECOPY ADDRESS DUP2 POP POP RETURN JUMPDEST PUSH0 DUP1 REVERT INVALID PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DUP9 LOG3 0xB2 RETURNDATACOPY SWAP12 0x24 0xCD OR BALANCE SWAP2 PUSH22 0x19317DD3F02B2753576B828397012928C0B5D7875A64 PUSH20 0x6F6C634300081400330000000000000000000000 ",
-			"sourceMap": "283:19875:5:-:0;;;;;;;;;;;;;;;;;;;;;"
+			"object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220d66af718b097c34d8961acc92995197544776578bd332f4d66205aabed0593b064736f6c63430008140033",
+			"opcodes": "PUSH1 0x80 DUP1 PUSH1 0x40 MSTORE CALLVALUE PUSH1 0x17 JUMPI PUSH1 0x39 SWAP1 DUP2 PUSH1 0x1C DUP3 CODECOPY ADDRESS DUP2 POP POP RETURN JUMPDEST PUSH0 DUP1 REVERT INVALID PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xD6 PUSH11 0xF718B097C34D8961ACC929 SWAP6 NOT PUSH22 0x44776578BD332F4D66205AABED0593B064736F6C6343 STOP ADDMOD EQ STOP CALLER ",
+			"sourceMap": "283:26504:5:-:0;;;;;;;;;;;;;;;;;;;;;"
 		},
 		"deployedBytecode": {
 			"functionDebugData": {},
 			"generatedSources": [],
 			"immutableReferences": {},
 			"linkReferences": {},
-			"object": "5f80fdfea264697066735822122088a3b23e9b24cd1731917519317dd3f02b2753576b828397012928c0b5d7875a64736f6c63430008140033",
-			"opcodes": "PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DUP9 LOG3 0xB2 RETURNDATACOPY SWAP12 0x24 0xCD OR BALANCE SWAP2 PUSH22 0x19317DD3F02B2753576B828397012928C0B5D7875A64 PUSH20 0x6F6C634300081400330000000000000000000000 ",
-			"sourceMap": "283:19875:5:-:0;;"
+			"object": "5f80fdfea2646970667358221220d66af718b097c34d8961acc92995197544776578bd332f4d66205aabed0593b064736f6c63430008140033",
+			"opcodes": "PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xD6 PUSH11 0xF718B097C34D8961ACC929 SWAP6 NOT PUSH22 0x44776578BD332F4D66205AABED0593B064736F6C6343 STOP ADDMOD EQ STOP CALLER ",
+			"sourceMap": "283:26504:5:-:0;;"
 		},
 		"gasEstimates": {
 			"creation": {
@@ -43,6 +43,7 @@
 			},
 			"internal": {
 				"_balanceOf(address,address)": "infinite",
+				"_findBracket(address,address[] memory,address[] memory,uint24[] memory)": "infinite",
 				"_getCrossProtocolPrices(address[] memory,bool)": "infinite",
 				"_getOrderedReserves(address,address)": "infinite",
 				"_getPoolPriceQ96(address,bool)": "infinite",
@@ -51,19 +52,22 @@
 				"_getV3Prices(address[] memory,bool)": "infinite",
 				"_isContract(address)": "infinite",
 				"_isUniswapV3(address)": "infinite",
+				"_quoteProfit(address,address[] memory,address[] memory,uint24[] memory,uint256)": "infinite",
 				"_safeTransfer(address,address,uint256)": "infinite",
 				"_scalingFactor(uint256)": "infinite",
 				"_solveQuadratic(int256,int256,int256)": "infinite",
 				"_token0(address)": "infinite",
 				"_token1(address)": "infinite",
 				"_validatePoolTokens(address[] memory,address[] memory)": "infinite",
-				"calcOptimalBorrow(address[] memory,address[] memory,uint24[] memory,uint8)": "infinite",
+				"calcOptimalBorrow(address,address[] memory,address[] memory,uint24[] memory,uint8)": "infinite",
 				"calcOptimalV2Borrow(uint256,uint256,uint256,uint256,uint24,uint24,uint8)": "infinite",
+				"findOptimalAmount(address,address[] memory,address[] memory,uint24[] memory,uint8,uint256)": "infinite",
 				"getAmountInV2(uint256,uint256,uint256)": "infinite",
 				"getAmountInV2WithFee(uint256,uint256,uint256,uint24)": "infinite",
 				"getAmountOutV2(uint256,uint256,uint256)": "infinite",
 				"getAmountOutV2WithFee(uint256,uint256,uint256,uint24)": "infinite",
 				"getEffectiveReservesV3(address)": "infinite",
+				"getProbes()": "infinite",
 				"getReservesV2(address)": "infinite",
 				"sortPools(address[] memory,address[] memory,uint24[] memory,bool)": "infinite",
 				"sqrt(uint256)": "infinite"

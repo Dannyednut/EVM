@@ -33,5 +33,6 @@
   "@uniswap/v3-periphery@1.4.4/contracts/interfaces/external/IWETH9.sol": ".deps/npm/@uniswap/v3-periphery@1.4.4/contracts/interfaces/external/IWETH9.sol",
   "contracts@0.4.0/libraries/interfaces/IUniswapV2Pair.sol": ".deps/npm/contracts@0.4.0/libraries/interfaces/IUniswapV2Pair.sol",
   "contracts@0.4.0/libraries/Helper_v.sol": ".deps/npm/contracts@0.4.0/libraries/Helper_v.sol",
-  "github.com@1.0.0/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Migrator.sol": ".deps/npm/github.com@1.0.0/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Migrator.sol"
+  "github.com@1.0.0/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Migrator.sol": ".deps/npm/github.com@1.0.0/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Migrator.sol",
+  "contracts@0.4.0/libraries/HelperV.sol": ".deps/npm/contracts@0.4.0/libraries/HelperV.sol"
 }

@@ -18,7 +18,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/libraries/Helper.sol": "Helper"
+			"contracts/libraries/HelperV3.sol": "Helper"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -73,12 +73,12 @@
 				"dweb:/ipfs/QmbAHZySkkpr3FvEBYSyXb77SyBjZxorgcfXq5uynw9q6C"
 			]
 		},
-		"contracts/libraries/Helper.sol": {
-			"keccak256": "0x18caf115ff567ff0752ddeb4e5ed6899a4c150142f416c396d3b18bf28816a29",
+		"contracts/libraries/HelperV3.sol": {
+			"keccak256": "0x58ce8561938c122da2a079d38ad2a1637c82d3e36c4c2a72e76ed0fc1a493e07",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://389d89801c3178a662e3ed2f5ce4a5e4f514801168a1c26dd0e1d09e1df81655",
-				"dweb:/ipfs/QmRkDdnJCj6PQnGrSVQ7DmkU2bxhDAHBco8j6znabhVPAU"
+				"bzz-raw://4e13862d0778334a861c838eadec013d74ccb560ef111fc4f4d0f85780f660e1",
+				"dweb:/ipfs/QmSVyypU4s7qS3m497aaDV9B5v6yEMq3kSgqeRMHVyjbbC"
 			]
 		},
 		"contracts/libraries/SafeMathCopy.sol": {

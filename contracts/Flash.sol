@@ -96,7 +96,7 @@ contract Exec is Ownable, ReentrancyGuard {
     /// @notice Entry point for executing an arbitrage opportunity.
     /// @dev Validates the path, determines the borrow amount if not supplied, then
     ///      initiates a flash loan or flash swap from the preferred source.
-    ///      Use the `ad` return value from yield() as the `arb` argument here
+    ///      Use the `ad` return value from yieldOut() as the `arb` argument here
     ///      to ensure the borrow amount and sorted pools are consistent with the simulation.
     /// @param arb           Arbitrage parameters including token path, pools, fees, and constraints.
     /// @param lender If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).
@@ -111,7 +111,7 @@ contract Exec is Ownable, ReentrancyGuard {
 
         // Copy calldata to memory so _determineBorrow can mutate (sort pools, set amountIn)
         Data memory arbMem = arb; uint256 profit;
-        (arbMem, profit) = yield(arbMem);
+        (arbMem, profit) = yieldOut(arbMem);
         uint256 borrowAmt = arbMem.amountIn;
 
         if (profit < arbMem.minProfit || profit == 0) revert NoProfit();
@@ -137,12 +137,6 @@ contract Exec is Ownable, ReentrancyGuard {
         returns (Data memory)
     {
         if (arb.pools.length < 2) revert BadPath();
-
-        for (uint256 i = 0; i < arb.pools.length; ) {
-            (address pt0, address pt1) = (Helper._token0(arb.pools[i]), Helper._token1(arb.pools[i]));
-            require(pt0 < pt1, "nonstandard pair");
-            unchecked { ++i; }
-        }
 
         if (arb.pools.length == 2) {
             bool borrowIs0 = (arb.tokenIn == Helper._token0(arb.pools[0]));
@@ -354,7 +348,7 @@ contract Exec is Ownable, ReentrancyGuard {
         }
     }
 
-    function yield(Data memory arb)
+    function yieldOut(Data memory arb)
         public
         view
         returns (Data memory ad, uint256 profit)

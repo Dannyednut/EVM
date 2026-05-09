@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IUniswapV2Pair.sol";
 import "./interfaces/IUniswapV3Pool.sol";
 import "./interfaces/IWETH.sol";
@@ -67,7 +69,11 @@ contract DirectSwap {
         if (pool == address(0))  revert ZeroAddress();
 
         // Pull tokenIn from caller into this contract
-        _pullFrom(tokenIn, msg.sender, amountIn);
+        SafeERC20.forceApprove(IERC20(tokenIn), address(this), amountIn);
+        SafeERC20.safeTransferFrom(
+            IERC20(tokenIn), msg.sender, address(this), amountIn
+        );
+        // _pullFrom(tokenIn, msg.sender, amountIn);
 
         amountOut = _route(pool, tokenIn, amountIn, to);
 

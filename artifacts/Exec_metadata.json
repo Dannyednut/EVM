@@ -452,7 +452,7 @@
 						"type": "tuple"
 					}
 				],
-				"name": "yield",
+				"name": "yieldOut",
 				"outputs": [
 					{
 						"components": [
@@ -544,7 +544,7 @@
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
 				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256)": {
-					"details": "Validates the path, determines the borrow amount if not supplied, then      initiates a flash loan or flash swap from the preferred source.      Use the `ad` return value from yield() as the `arb` argument here      to ensure the borrow amount and sorted pools are consistent with the simulation.",
+					"details": "Validates the path, determines the borrow amount if not supplied, then      initiates a flash loan or flash swap from the preferred source.      Use the `ad` return value from yieldOut() as the `arb` argument here      to ensure the borrow amount and sorted pools are consistent with the simulation.",
 					"params": {
 						"arb": "Arbitrage parameters including token path, pools, fees, and constraints.",
 						"lender": "If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).                      If not true, borrows via a pool flash swap."
@@ -630,11 +630,11 @@
 			]
 		},
 		"contracts/Flash.sol": {
-			"keccak256": "0x7badf563da08bac0b9029f737f523b83bca690e08be86e5f9f49098f8eb56f3b",
+			"keccak256": "0x3508dec235ecd44ad1546b1344e9cbfff6f9b0824a2e21023a36e6d2df123fcc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://083001fd437b386ba9ba9d324559b8f81d4a7789fe366b96b17ec1156639cf1b",
-				"dweb:/ipfs/QmPzXchDy8b2pRV83vtdMGnUatSHSa5hFPUkr1jPUjroSB"
+				"bzz-raw://fbab600bf0adcbb19cb8a298673c9444ebb8c2e7eb6e1ec4074b9d03669af108",
+				"dweb:/ipfs/QmaGukkCGmuFzjSgfnTCimKWjrfEV4ocKiqUkdGTW9XrEh"
 			]
 		},
 		"contracts/interfaces/IBalancerVault.sol": {
@@ -686,11 +686,11 @@
 			]
 		},
 		"contracts/libraries/HelperV3.sol": {
-			"keccak256": "0x58ce8561938c122da2a079d38ad2a1637c82d3e36c4c2a72e76ed0fc1a493e07",
+			"keccak256": "0x21183433a398e650976fefe3d0ab5106a72c2f4e60ccc13f132e6e1d078453a3",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://4e13862d0778334a861c838eadec013d74ccb560ef111fc4f4d0f85780f660e1",
-				"dweb:/ipfs/QmSVyypU4s7qS3m497aaDV9B5v6yEMq3kSgqeRMHVyjbbC"
+				"bzz-raw://7dd77c4e7955474b9209b586713c91664c4739da32577bcc3db92cae38c98912",
+				"dweb:/ipfs/QmeEpmu1Lryu74SiJ7XnTpxKxUUyY7wLXEi2QXqzdLkzvN"
 			]
 		},
 		"contracts/libraries/SafeMathCopy.sol": {

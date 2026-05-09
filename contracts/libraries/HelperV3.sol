@@ -419,7 +419,7 @@ library Helper {
             (uint256 resInP1,  uint256 resOutP1)  = _getOrderedReserves(pools[1], tokens[1]);
             return calcOptimalV2Borrow(resInP0, resOutP0, resInP1, resOutP1, fees[0], fees[1], mode);
         }else{
-            (uint256 amount,) = findOptimalAmount(quoter, tokens, pools, fees, mode, 40);
+            (uint256 amount,) = findOptimalAmount(quoter, tokens, pools, fees, mode, 50);
             return amount;
         }
     }
@@ -484,6 +484,7 @@ library Helper {
             address tokenIn  = tokens[i];
             address tokenOut = tokens[i + 1];
             (address pt0, address pt1) = (_token0(pools[i]), _token1(pools[i]));
+            require(pt0 < pt1, "nonstandard pair");
             require(
                 (pt0 == tokenIn && pt1 == tokenOut) ||
                 (pt0 == tokenOut && pt1 == tokenIn),
@@ -557,7 +558,7 @@ library Helper {
 
         // Step 2: Golden Section iterations
         for (uint256 i = 0; i < maxIterations; ++i) {
-            if (high - low < 1_000) break; // min interval
+            if (high - low < 1000) break; // min interval
 
             if (f1 > f2) {
                 // Peak is in [c2, high]

@@ -34,5 +34,9 @@
   "contracts@0.4.0/libraries/interfaces/IUniswapV2Pair.sol": ".deps/npm/contracts@0.4.0/libraries/interfaces/IUniswapV2Pair.sol",
   "contracts@0.4.0/libraries/Helper_v.sol": ".deps/npm/contracts@0.4.0/libraries/Helper_v.sol",
   "github.com@1.0.0/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Migrator.sol": ".deps/npm/github.com@1.0.0/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Migrator.sol",
-  "contracts@0.4.0/libraries/HelperV.sol": ".deps/npm/contracts@0.4.0/libraries/HelperV.sol"
+  "contracts@0.4.0/libraries/HelperV.sol": ".deps/npm/contracts@0.4.0/libraries/HelperV.sol",
+  "@openzeppelin/contracts@3.4.2-solc-0.7/utils/EnumerableSet.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/utils/EnumerableSet.sol",
+  "@openzeppelin/contracts@3.4.2-solc-0.7/access/Ownable.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/access/Ownable.sol",
+  "@openzeppelin/contracts@3.4.2-solc-0.7/utils/Context.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/utils/Context.sol",
+  "hardhat@3.4.5/console.sol": ".deps/npm/hardhat@3.4.5/console.sol"
 }

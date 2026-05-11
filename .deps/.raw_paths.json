@@ -38,5 +38,15 @@
   "@openzeppelin/contracts@3.4.2-solc-0.7/utils/EnumerableSet.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/utils/EnumerableSet.sol",
   "@openzeppelin/contracts@3.4.2-solc-0.7/access/Ownable.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/access/Ownable.sol",
   "@openzeppelin/contracts@3.4.2-solc-0.7/utils/Context.sol": ".deps/npm/@openzeppelin/contracts@3.4.2-solc-0.7/utils/Context.sol",
-  "hardhat@3.4.5/console.sol": ".deps/npm/hardhat@3.4.5/console.sol"
+  "hardhat@3.4.5/console.sol": ".deps/npm/hardhat@3.4.5/console.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/callback/IUniswapV3SwapCallback.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/callback/IUniswapV3SwapCallback.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/IUniswapV3Pool.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/IUniswapV3Pool.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolImmutables.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolImmutables.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolState.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolState.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolDerivedState.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolDerivedState.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolActions.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolActions.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolEvents.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/pool/IUniswapV3PoolEvents.sol",
+  "@uniswap/v3-core@1.0.0/contracts/interfaces/callback/IUniswapV3FlashCallback.sol": ".deps/npm/@uniswap/v3-core@1.0.0/contracts/interfaces/callback/IUniswapV3FlashCallback.sol",
+  "contracts@0.4.0/Reserves.sol": ".deps/npm/contracts@0.4.0/Reserves.sol"
 }

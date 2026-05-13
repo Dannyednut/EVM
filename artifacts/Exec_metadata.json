@@ -316,6 +316,11 @@
 					},
 					{
 						"internalType": "uint256",
+						"name": "builderFeeBps",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
 						"name": "validUntilBlock",
 						"type": "uint256"
 					}
@@ -543,7 +548,7 @@
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
-				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256)": {
+				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256,uint256)": {
 					"details": "Validates the path, determines the borrow amount if not supplied, then      initiates a flash loan or flash swap from the preferred source.      Use the `ad` return value from yieldOut() as the `arb` argument here      to ensure the borrow amount and sorted pools are consistent with the simulation.",
 					"params": {
 						"arb": "Arbitrage parameters including token path, pools, fees, and constraints.",
@@ -565,7 +570,7 @@
 				"multiCall(bytes[])": {
 					"notice": "Executes multiple arbs. Continues on failure.         Forwards all DONE events from successful executions."
 				},
-				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256)": {
+				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256,uint256)": {
 					"notice": "Entry point for executing an arbitrage opportunity."
 				}
 			},
@@ -630,11 +635,11 @@
 			]
 		},
 		"contracts/Flash.sol": {
-			"keccak256": "0x3508dec235ecd44ad1546b1344e9cbfff6f9b0824a2e21023a36e6d2df123fcc",
+			"keccak256": "0x781d7dde0813bc94eb97da9bae1452b35621e1ad958b14994e39ad68be32250b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fbab600bf0adcbb19cb8a298673c9444ebb8c2e7eb6e1ec4074b9d03669af108",
-				"dweb:/ipfs/QmaGukkCGmuFzjSgfnTCimKWjrfEV4ocKiqUkdGTW9XrEh"
+				"bzz-raw://d030eb3a9cffa3f7055f51d182179f96e5dfc3ab4fb8730a250f57720bf1e268",
+				"dweb:/ipfs/QmY6vEsZmQJcVxXvDozkpPUJcwMPcfzPZomMUpHE8sh41K"
 			]
 		},
 		"contracts/interfaces/IBalancerVault.sol": {

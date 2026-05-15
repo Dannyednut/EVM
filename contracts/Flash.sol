@@ -76,50 +76,37 @@ contract Exec is Ownable, ReentrancyGuard {
      * @notice Executes multiple arbs. Continues on failure.
      *         Forwards all DONE events from successful executions.
      */
-    function multiCall(bytes[] calldata calls) external onlyOwner returns (uint256 successful, uint256 failed) {
+    function multiCall(bytes[] calldata calls)external onlyOwner returns (uint256 successful, uint256 failed) {
         uint256 len = calls.length;
         successful = 0;
 
         for (uint256 i = 0; i < len; ) {
-            // Strip first 32 bytes (junk_hash), execute remaining calldata
-            // bytes memory realData = new bytes(calls[i].length - 32);
-            // for(uint j=32; j<calls[i].length; j++) {
-            //     realData[j-32] = calls[i][j];
-            // }
-            // (bool success,) = address(this).call(calls[i]);   // call swap()
-
-            // if (success) {
-            //     successful++;
-            // }
-
             bytes calldata input = calls[i];
-            if (input.length <= 32) {  // Skip invalid
-                unchecked { ++i; continue; }
+            if (input.length <= 32) {
+                unchecked { ++i; }
+                continue;
             }
-            
-            // Assembly byte copy (gas efficient)
+
             bytes memory realData;
             assembly {
-                let inLen := mload(input)
-                let realLen := sub(inLen, 32)
-                
+                let realLen := sub(input.length, 32)
+
                 // Allocate realData
                 realData := mload(0x40)
-                mstore(0x40, add(realData, add(0x20, realLen)))
                 mstore(realData, realLen)
-                
-                // Copy bytes[32:end] → realData[0:end-32]
-                calldatacopy(add(realData, 0x20), add(input.offset, 0x20), realLen)
+
+                // Copy input[32:] → realData[0:]
+                calldatacopy(add(realData, 0x20), add(input.offset, 32), realLen)
+
+                // Update free memory pointer (align 32)
+                mstore(0x40, and(add(add(realData, 0x20), realLen), not(0x1f)))
             }
-            
-            // CALL with ALL remaining gas (important for nested swaps)
-            (bool success, ) = address(this).call{gas: gas()}(realData);
-            
-            // Allow failure → continue (don't revert bundle)
+
+            (bool success, ) = address(this).call{gas: gasleft()}(realData);
             if (success) {
                 successful++;
             }
-            
+
             unchecked { ++i; }
         }
 
@@ -139,7 +126,7 @@ contract Exec is Ownable, ReentrancyGuard {
         // Allow calls from owner directly OR from this contract (via multiCall)
         if (msg.sender != owner() && msg.sender != address(this)) revert Auth();
         if (block.number > validUntilBlock) revert Block();
-        if (arb.tokens.length < 2) revert BadPath();
+        if (arb.tokens.length <= 2) revert BadPath();
         if (arb.pools.length != arb.tokens.length - 1) revert BadPath();
         Helper._validatePoolTokens(arb.tokens, arb.pools);
 
@@ -171,8 +158,7 @@ contract Exec is Ownable, ReentrancyGuard {
         view
         returns (Data memory)
     {
-        if (arb.pools.length < 2) revert BadPath();
-
+        if (arb.amountIn > 0) return arb; // already sorted by yieldOut()
         if (arb.pools.length == 2) {
             bool borrowIs0 = (arb.tokenIn == Helper._token0(arb.pools[0]));
             (arb.pools, arb.tokens, arb.fees) = Helper.sortPools(arb.pools, arb.tokens, arb.fees, borrowIs0);
@@ -184,7 +170,6 @@ contract Exec is Ownable, ReentrancyGuard {
             );
         }
 
-        if (arb.amountIn > 0) return arb;
         arb.amountIn = Helper.calcOptimalBorrow(Quoter, arb.pools, arb.tokens, arb.fees, arb.mode);
         return arb;
     }

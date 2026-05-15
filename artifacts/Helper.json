@@ -22,18 +22,18 @@
 			"functionDebugData": {},
 			"generatedSources": [],
 			"linkReferences": {},
-			"object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea26469706673582212201b9d6b0b5cd98d7f5c4864b702cc639e34a1c21ecc5b4ae52b1bb713023e0d0a64736f6c63430008140033",
-			"opcodes": "PUSH1 0x80 DUP1 PUSH1 0x40 MSTORE CALLVALUE PUSH1 0x17 JUMPI PUSH1 0x39 SWAP1 DUP2 PUSH1 0x1C DUP3 CODECOPY ADDRESS DUP2 POP POP RETURN JUMPDEST PUSH0 DUP1 REVERT INVALID PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 SHL SWAP14 PUSH12 0xB5CD98D7F5C4864B702CC63 SWAP15 CALLVALUE LOG1 0xC2 0x1E 0xCC JUMPDEST 0x4A 0xE5 0x2B SHL 0xB7 SGT MUL RETURNDATACOPY 0xD EXP PUSH5 0x736F6C6343 STOP ADDMOD EQ STOP CALLER ",
-			"sourceMap": "283:26556:5:-:0;;;;;;;;;;;;;;;;;;;;;"
+			"object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220fc9f87e0cd8b97615b8fa974c9f43ed2346cc6db3e0d701efe55bbb1bc3db3c364736f6c63430008140033",
+			"opcodes": "PUSH1 0x80 DUP1 PUSH1 0x40 MSTORE CALLVALUE PUSH1 0x17 JUMPI PUSH1 0x39 SWAP1 DUP2 PUSH1 0x1C DUP3 CODECOPY ADDRESS DUP2 POP POP RETURN JUMPDEST PUSH0 DUP1 REVERT INVALID PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xFC SWAP16 DUP8 0xE0 0xCD DUP12 SWAP8 PUSH2 0x5B8F 0xA9 PUSH21 0xC9F43ED2346CC6DB3E0D701EFE55BBB1BC3DB3C364 PUSH20 0x6F6C634300081400330000000000000000000000 ",
+			"sourceMap": "259:15498:4:-:0;;;;;;;;;;;;;;;;;;;;;"
 		},
 		"deployedBytecode": {
 			"functionDebugData": {},
 			"generatedSources": [],
 			"immutableReferences": {},
 			"linkReferences": {},
-			"object": "5f80fdfea26469706673582212201b9d6b0b5cd98d7f5c4864b702cc639e34a1c21ecc5b4ae52b1bb713023e0d0a64736f6c63430008140033",
-			"opcodes": "PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 SHL SWAP14 PUSH12 0xB5CD98D7F5C4864B702CC63 SWAP15 CALLVALUE LOG1 0xC2 0x1E 0xCC JUMPDEST 0x4A 0xE5 0x2B SHL 0xB7 SGT MUL RETURNDATACOPY 0xD EXP PUSH5 0x736F6C6343 STOP ADDMOD EQ STOP CALLER ",
-			"sourceMap": "283:26556:5:-:0;;"
+			"object": "5f80fdfea2646970667358221220fc9f87e0cd8b97615b8fa974c9f43ed2346cc6db3e0d701efe55bbb1bc3db3c364736f6c63430008140033",
+			"opcodes": "PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xFC SWAP16 DUP8 0xE0 0xCD DUP12 SWAP8 PUSH2 0x5B8F 0xA9 PUSH21 0xC9F43ED2346CC6DB3E0D701EFE55BBB1BC3DB3C364 PUSH20 0x6F6C634300081400330000000000000000000000 ",
+			"sourceMap": "259:15498:4:-:0;;"
 		},
 		"gasEstimates": {
 			"creation": {
@@ -44,12 +44,8 @@
 			"internal": {
 				"_balanceOf(address,address)": "infinite",
 				"_findBracket(address,address[] memory,address[] memory,uint24[] memory)": "infinite",
-				"_getCrossProtocolPrices(address[] memory,bool)": "infinite",
 				"_getOrderedReserves(address,address)": "infinite",
 				"_getPoolPriceQ96(address,bool)": "infinite",
-				"_getPriceV3(address)": "infinite",
-				"_getV2Prices(address[] memory,bool)": "infinite",
-				"_getV3Prices(address[] memory,bool)": "infinite",
 				"_isContract(address)": "infinite",
 				"_isUniswapV3(address)": "infinite",
 				"_quoteProfit(address,address[] memory,address[] memory,uint24[] memory,uint256)": "infinite",
@@ -67,8 +63,6 @@
 				"getAmountOutV2(uint256,uint256,uint256)": "infinite",
 				"getAmountOutV2WithFee(uint256,uint256,uint256,uint24)": "infinite",
 				"getEffectiveReservesV3(address)": "infinite",
-				"getProbes()": "infinite",
-				"getReservesV2(address)": "infinite",
 				"sortPools(address[] memory,address[] memory,uint24[] memory,bool)": "infinite",
 				"sqrt(uint256)": "infinite"
 			}

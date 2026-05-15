@@ -155,45 +155,6 @@
 				"type": "fallback"
 			},
 			{
-				"inputs": [],
-				"name": "BALANCER_VAULT",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Quoter",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "WETH",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "bytes[]",
@@ -535,25 +496,11 @@
 			},
 			"kind": "dev",
 			"methods": {
-				"constructor": {
-					"params": {
-						"_b": "Balancer Vault address, or address(0) to disable Balancer flash loans.",
-						"_q": "View-only Quoter address for simulating V3 swap outputs.",
-						"_w": "WETH token address used for unwrapping profits."
-					}
-				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
-				},
-				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256,uint256)": {
-					"details": "Validates the path, determines the borrow amount if not supplied, then      initiates a flash loan or flash swap from the preferred source.      Use the `ad` return value from yieldOut() as the `arb` argument here      to ensure the borrow amount and sorted pools are consistent with the simulation.",
-					"params": {
-						"arb": "Arbitrage parameters including token path, pools, fees, and constraints.",
-						"lender": "If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).                      If not true, borrows via a pool flash swap."
-					}
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
@@ -563,23 +510,13 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {
-				"constructor": {
-					"notice": "Deploys the contract and sets immutable protocol addresses."
-				},
-				"multiCall(bytes[])": {
-					"notice": "Executes multiple arbs. Continues on failure.         Forwards all DONE events from successful executions."
-				},
-				"swap((uint256,uint256,address[],address[],uint24[],address,uint8),bool,uint256,uint256)": {
-					"notice": "Entry point for executing an arbitrage opportunity."
-				}
-			},
+			"methods": {},
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Flash.sol": "Exec"
+			"contracts/Exec.sol": "Exec"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -634,12 +571,12 @@
 				"dweb:/ipfs/QmarDJ5hZEgBtCmmrVzEZWjub9769eD686jmzb2XpSU1cM"
 			]
 		},
-		"contracts/Flash.sol": {
-			"keccak256": "0x781d7dde0813bc94eb97da9bae1452b35621e1ad958b14994e39ad68be32250b",
+		"contracts/Exec.sol": {
+			"keccak256": "0x143af3ac042da8dd40d41b9d046e0a8c7118037c5be26595065961b9294d4780",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d030eb3a9cffa3f7055f51d182179f96e5dfc3ab4fb8730a250f57720bf1e268",
-				"dweb:/ipfs/QmY6vEsZmQJcVxXvDozkpPUJcwMPcfzPZomMUpHE8sh41K"
+				"bzz-raw://0d90b7bce8036535b974a04626fee464e0ed07ca88784a43a5af5f80d5fcfaa2",
+				"dweb:/ipfs/QmQKgk4EgHs8vNFsMaCtuASf93KBwjwf8udJjqMSwd7r7b"
 			]
 		},
 		"contracts/interfaces/IBalancerVault.sol": {
@@ -682,28 +619,12 @@
 				"dweb:/ipfs/QmXFkgcUXERGcJmxwF1abBt4fZyw3zKEaU7XeGPLuDpNKQ"
 			]
 		},
-		"contracts/libraries/Decimal.sol": {
-			"keccak256": "0x3214ec23db268262846f8fe35d44f88a7c772f4e13ca6ea94b23c8114f9bda97",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://19ce3cca2df0da4ca43a3169b41f23a11ead5a910c900bbba7d7eaed4c50cada",
-				"dweb:/ipfs/QmbAHZySkkpr3FvEBYSyXb77SyBjZxorgcfXq5uynw9q6C"
-			]
-		},
-		"contracts/libraries/HelperV3.sol": {
-			"keccak256": "0x21183433a398e650976fefe3d0ab5106a72c2f4e60ccc13f132e6e1d078453a3",
+		"contracts/libraries/Helper.sol": {
+			"keccak256": "0x312d6573f68f0e4ecfebd7dd8e15dac7035ce53e74355e87e988d9cb47931399",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://7dd77c4e7955474b9209b586713c91664c4739da32577bcc3db92cae38c98912",
-				"dweb:/ipfs/QmeEpmu1Lryu74SiJ7XnTpxKxUUyY7wLXEi2QXqzdLkzvN"
-			]
-		},
-		"contracts/libraries/SafeMathCopy.sol": {
-			"keccak256": "0x3bf96f65037e8d46631354034f41317b8d1fda916b9c6ca3f4960328d836e298",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e56b1f31863ef8196397511b358d219343433fa3fdf480fa2993f6621e29a28e",
-				"dweb:/ipfs/Qmb6Z7apFEx8aEm8474xiDgD1vhk5CJW5EvD3Qzdyf6njw"
+				"bzz-raw://86c31e19e2185913b9cdc462ebf16255a7fb14c959b4b7807d62d28bd1dbe3e9",
+				"dweb:/ipfs/QmXm6f4x8uKoZojNpGDAZYtqN4W8SSMemQwLbJBgarmMRs"
 			]
 		}
 	},

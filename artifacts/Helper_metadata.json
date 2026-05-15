@@ -18,7 +18,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/libraries/HelperV3.sol": "Helper"
+			"contracts/libraries/Helper.sol": "Helper"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -65,28 +65,12 @@
 				"dweb:/ipfs/QmQFPBbtMDg5joWu9KsSLt1B7ZfPSgphkquE78L8fLghhJ"
 			]
 		},
-		"contracts/libraries/Decimal.sol": {
-			"keccak256": "0x3214ec23db268262846f8fe35d44f88a7c772f4e13ca6ea94b23c8114f9bda97",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://19ce3cca2df0da4ca43a3169b41f23a11ead5a910c900bbba7d7eaed4c50cada",
-				"dweb:/ipfs/QmbAHZySkkpr3FvEBYSyXb77SyBjZxorgcfXq5uynw9q6C"
-			]
-		},
-		"contracts/libraries/HelperV3.sol": {
-			"keccak256": "0x21183433a398e650976fefe3d0ab5106a72c2f4e60ccc13f132e6e1d078453a3",
+		"contracts/libraries/Helper.sol": {
+			"keccak256": "0x312d6573f68f0e4ecfebd7dd8e15dac7035ce53e74355e87e988d9cb47931399",
 			"license": "GPL-2.0-or-later",
 			"urls": [
-				"bzz-raw://7dd77c4e7955474b9209b586713c91664c4739da32577bcc3db92cae38c98912",
-				"dweb:/ipfs/QmeEpmu1Lryu74SiJ7XnTpxKxUUyY7wLXEi2QXqzdLkzvN"
-			]
-		},
-		"contracts/libraries/SafeMathCopy.sol": {
-			"keccak256": "0x3bf96f65037e8d46631354034f41317b8d1fda916b9c6ca3f4960328d836e298",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e56b1f31863ef8196397511b358d219343433fa3fdf480fa2993f6621e29a28e",
-				"dweb:/ipfs/Qmb6Z7apFEx8aEm8474xiDgD1vhk5CJW5EvD3Qzdyf6njw"
+				"bzz-raw://86c31e19e2185913b9cdc462ebf16255a7fb14c959b4b7807d62d28bd1dbe3e9",
+				"dweb:/ipfs/QmXm6f4x8uKoZojNpGDAZYtqN4W8SSMemQwLbJBgarmMRs"
 			]
 		}
 	},

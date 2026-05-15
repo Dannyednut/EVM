@@ -9,7 +9,7 @@ import "./interfaces/IUniswapV3Pool.sol";
 import "./interfaces/IQuoter.sol";
 import "./interfaces/IWETH.sol";
 import "./interfaces/IBalancerVault.sol";
-import {Helper} from "./libraries/HelperV3.sol";
+import {Helper} from "./libraries/Helper.sol";
 
 struct Data {
     uint256 amountIn;
@@ -21,23 +21,21 @@ struct Data {
     uint8 mode; // 0 = borrow token in, 1 = borrow other token
 }
 
-
 // Custom errors — 4 bytes vs N bytes for require strings
 error Auth();
 error Block();
 error BadPath();
 error NoProfit();
-error InsufficientBalance();
 error ZeroAddress();
-error TransferFailed();
 error AmountRequired();
+error TransferFailed();
 error ModePathMismatch();
+error InsufficientBalance();
 
 contract Exec is Ownable, ReentrancyGuard {
-
-    address public immutable WETH;
-    address public immutable Quoter;
-    address public immutable BALANCER_VAULT;
+    address private immutable WETH;
+    address private immutable Quoter;
+    address private immutable BALANCER_VAULT;
 
     // Set before initiating any flash loan/swap, validated inside every callback,
     // and cleared immediately after validation to prevent re-use.
@@ -46,10 +44,6 @@ contract Exec is Ownable, ReentrancyGuard {
     event DONE(address indexed token, uint256 amt);
     event BATCH(uint256 successful, uint256 failed);
 
-    /// @notice Deploys the contract and sets immutable protocol addresses.
-    /// @param _w  WETH token address used for unwrapping profits.
-    /// @param _q  View-only Quoter address for simulating V3 swap outputs.
-    /// @param _b  Balancer Vault address, or address(0) to disable Balancer flash loans.
     constructor(address _w, address _q, address _b) Ownable(msg.sender) {
         if (_w == address(0) || _q == address(0)) revert ZeroAddress();
         WETH = _w;
@@ -57,161 +51,114 @@ contract Exec is Ownable, ReentrancyGuard {
         BALANCER_VAULT = _b;
     }
 
-    /// @dev Accepts ETH from WETH.withdraw() during profit unwrapping.
     receive() external payable {}
 
-    /// @dev Redirects non-standard V2 fork swap callbacks (e.g. pancakeV2Call, sushiCall)
-    ///      to uniswapV2Call. Any 4-byte selector not matching a defined function will land
-    ///      here. Decodes the standard V2 callback payload and forwards it.
-    ///      Reverts if callback mismatch or if the payload is too short.
     fallback(bytes calldata _input) external returns (bytes memory) {
         if (_input.length < 4) revert BadPath();
         if (_expectedCallback != msg.sender) revert Auth();
+        
+        // Manual decode skip to save gas on abi.decode overhead
         (address sender, uint256 amount0, uint256 amount1, bytes memory data) = abi.decode(_input[4:], (address, uint256, uint256, bytes));
         uniswapV2Call(sender, amount0, amount1, data);
         return "";
     }
 
-    /**
-     * @notice Executes multiple arbs. Continues on failure.
-     *         Forwards all DONE events from successful executions.
-     */
     function multiCall(bytes[] calldata calls) external onlyOwner returns (uint256 successful, uint256 failed) {
         uint256 len = calls.length;
-        successful = 0;
-
+        
         for (uint256 i = 0; i < len; ) {
-            (bool success,) = address(this).call(calls[i]);   // call swap()
+            bytes calldata input = calls[i];
+            if (input.length > 32) {
+                bytes memory realData;
+                assembly {
+                    let realLen := sub(input.length, 32)
+                    realData := mload(0x40)
+                    mstore(realData, realLen)
+                    calldatacopy(add(realData, 0x20), add(input.offset, 32), realLen)
+                    mstore(0x40, and(add(add(realData, 0x20), realLen), not(0x1f)))
+                }
 
-            if (success) {
-                successful++;
+                (bool success, ) = address(this).call{gas: gasleft()}(realData);
+                if (success) {
+                    unchecked { ++successful; }
+                }
             }
             unchecked { ++i; }
         }
-
+        
         failed = len - successful;
         emit BATCH(successful, failed);
     }
 
-    /// @notice Entry point for executing an arbitrage opportunity.
-    /// @dev Validates the path, determines the borrow amount if not supplied, then
-    ///      initiates a flash loan or flash swap from the preferred source.
-    ///      Use the `ad` return value from yieldOut() as the `arb` argument here
-    ///      to ensure the borrow amount and sorted pools are consistent with the simulation.
-    /// @param arb           Arbitrage parameters including token path, pools, fees, and constraints.
-    /// @param lender If true, forces borrowing via Balancer flash loan (requires BALANCER_VAULT set).
-    ///                      If not true, borrows via a pool flash swap.
-    function swap(Data calldata arb, bool lender, uint256 validUntilBlock) external nonReentrant {
-        // Allow calls from owner directly OR from this contract (via multiCall)
-        if (msg.sender != owner() && msg.sender != address(this)) revert Auth();
+    function swap(Data calldata arb, bool lender, uint256 builderFeeBps, uint256 validUntilBlock) external nonReentrant {
+        address _owner = owner(); // Cache storage variable
+        if (msg.sender != _owner && msg.sender != address(this)) revert Auth();
         if (block.number > validUntilBlock) revert Block();
-        if (arb.tokens.length < 2) revert BadPath();
-        if (arb.pools.length != arb.tokens.length - 1) revert BadPath();
+        
+        uint256 tokensLen = arb.tokens.length;
+        if (tokensLen <= 2) revert BadPath();
+        if (arb.pools.length != tokensLen - 1) revert BadPath();
+        
         Helper._validatePoolTokens(arb.tokens, arb.pools);
 
-        // Copy calldata to memory so _determineBorrow can mutate (sort pools, set amountIn)
-        Data memory arbMem = arb; uint256 profit;
+        Data memory arbMem = arb; 
+        uint256 profit;
         (arbMem, profit) = yieldOut(arbMem);
+        
         uint256 borrowAmt = arbMem.amountIn;
 
         if (profit < arbMem.minProfit || profit == 0) revert NoProfit();
         if (borrowAmt == 0) revert AmountRequired();
-        if (arbMem.tokens[arbMem.tokens.length - 1] != arbMem.tokenIn) revert BadPath();
-        uint256 startBalance = Helper._balanceOf(arbMem.tokenIn, address(this));
-
-        bytes memory payload = abi.encode(arbMem, borrowAmt, startBalance);
-
-        if (lender && BALANCER_VAULT != address(0)) _initiateFlashloan(arbMem, borrowAmt, payload);
-        else _initiateFlashswap(arbMem, borrowAmt, payload);
-    }
-
-    /// @dev Determines the optimal borrow amount for the arb if not supplied by the caller.
-    ///      Sorts pools so the borrow pool comes first, then applies the appropriate
-    ///      optimal-amount formula based on whether pools are V2, V3, or mixed.
-    ///      For paths with 3+ pools, the caller must supply amountIn manually.
-    /// @param arb Arbitrage parameters, possibly with amountIn = 0.
-    /// @return arb Updated arb with amountIn set and pools sorted.
-    function _determineBorrow(Data memory arb)
-        internal
-        view
-        returns (Data memory)
-    {
-        if (arb.pools.length < 2) revert BadPath();
-
-        if (arb.pools.length == 2) {
-            bool borrowIs0 = (arb.tokenIn == Helper._token0(arb.pools[0]));
-            (arb.pools, arb.tokens, arb.fees) = Helper.sortPools(arb.pools, arb.tokens, arb.fees, borrowIs0);
+        if (arbMem.tokens[tokensLen - 1] != arbMem.tokenIn) revert BadPath();
         
-            require(
-                Helper._token0(arb.pools[0]) == Helper._token0(arb.pools[1]) &&
-                Helper._token1(arb.pools[0]) == Helper._token1(arb.pools[1]),
-                "pools must share a common token"
-            );
-        }
+        uint256 startBalance = Helper._balanceOf(arbMem.tokenIn, address(this));
+        bytes memory payload = abi.encode(arbMem, borrowAmt);
 
-        if (arb.amountIn > 0) return arb;
-        arb.amountIn = Helper.calcOptimalBorrow(Quoter, arb.pools, arb.tokens, arb.fees, arb.mode);
-        return arb;
+        if (lender && BALANCER_VAULT != address(0)) {
+            _initiateFlashloan(arbMem, borrowAmt, payload);
+        } else {
+            _initiateFlashswap(arbMem, borrowAmt, payload);
+        }
+        
+        _processProfit(arbMem, startBalance, builderFeeBps, _owner);
     }
 
-    /// @dev Initiates a Balancer flash loan for the borrow token.
-    ///      Sets _expectedCallback to BALANCER_VAULT before the call so the
-    ///      receiveFlashLoan callback can authenticate the caller.
-    /// @param arb     Arbitrage parameters.
-    /// @param amt     Amount to borrow.
-    /// @param payload ABI-encoded (Data, borrowAmt, startBalance) passed through to the callback.
     function _initiateFlashloan(Data memory arb, uint256 amt, bytes memory payload) internal {
         _expectedCallback = BALANCER_VAULT;
 
         address[] memory a = new address[](1); a[0] = arb.tokenIn;
         uint256[] memory am = new uint256[](1); am[0] = amt;
-        try IBalancerVault(BALANCER_VAULT).flashLoan(address(this), a, am, payload) {
-        } catch {
+        
+        try IBalancerVault(BALANCER_VAULT).flashLoan(address(this), a, am, payload) {} 
+        catch {
             _expectedCallback = address(0);
-            // revert("Balancer FL failed");
             (uint256 resIn, uint256 resOut) = Helper._getOrderedReserves(arb.pools[0], arb.tokenIn);
             (arb.amountIn, arb.mode) = (Helper.getAmountOutV2WithFee(arb.amountIn, resIn, resOut, arb.fees[0]), 1);
-            uint256 startBalance = Helper._balanceOf(arb.tokenIn, address(this));
-
-            _initiateFlashswap(arb, arb.amountIn, abi.encode(arb, arb.amountIn, startBalance));
+            _initiateFlashswap(arb, arb.amountIn, abi.encode(arb, arb.amountIn));
         }
     }
 
-    /// @dev Initiates a flash swap directly from a Uniswap V2 or V3 pool.
-    ///      For V3 mode 1: uses pool.swap() with a negative amountSpecified to receive
-    ///                     tokens upfront and repay with the other token.
-    ///      For V2 mode 1: uses pair.swap() on pools[0], repaying with the output token.
-    /// @param arb       Arbitrage parameters.
-    /// @param borrowAmt Amount to borrow.
-    /// @param payload   ABI-encoded callback data passed through to the pool callback.
     function _initiateFlashswap(Data memory arb, uint256 borrowAmt, bytes memory payload) internal {
-        if (Helper._isUniswapV3(arb.pools[0])) {
+        address pool0 = arb.pools[0];
+        if (Helper._isUniswapV3(pool0)) {
             if (arb.mode == 0) revert BadPath();
-            _expectedCallback = arb.pools[0];
-            bool z = (arb.tokenIn == Helper._token0(arb.pools[0]));
+            _expectedCallback = pool0;
+            bool z = (arb.tokenIn == Helper._token0(pool0));
             uint160 sqrtLimit = z ? 4295128740 : 1461446703485210103287273052203988822378723970341;
-            // Prepend mode discriminator (2) to payload for callback dispatch
-            // bytes memory data = abi.encodePacked(uint8(2), payload);
-            (Data memory ad, uint256 b, uint256 c) = abi.decode(payload, (Data, uint256, uint256));
-            bytes memory data = abi.encode(uint8(2), ad, b, c);
-            IUniswapV3Pool(arb.pools[0]).swap(address(this), z, -int256(borrowAmt), sqrtLimit, data);
             
+            bytes memory data = abi.encode(uint8(2), arb, borrowAmt);
+            IUniswapV3Pool(pool0).swap(address(this), z, -int256(borrowAmt), sqrtLimit, data);
             return;
         }
 
-        IUniswapV2Pair pair = IUniswapV2Pair(arb.pools[0]);
+        IUniswapV2Pair pair = IUniswapV2Pair(pool0);
         _expectedCallback = address(pair);
+        bool isT0 = arb.tokenIn == Helper._token0(address(pair));
 
-        address token0 = Helper._token0(address(pair));
-        bool isT0 = arb.tokenIn == token0;
+        (uint256 a0out, uint256 a1out) = isT0 ? (uint256(0), borrowAmt) : (borrowAmt, uint256(0));
 
-        uint256 a0out; uint256 a1out;
-        (a0out, a1out) = isT0 ? (uint256(0), borrowAmt) : (borrowAmt, uint256(0));
-
-        // Pass payload directly — uniswapV2Call recomputes debtAmount on-the-fly
-        try pair.swap(a0out, a1out, address(this), payload) {
-            // _expectedCallback cleared inside uniswapV2Call callback
-        } catch {
+        try pair.swap(a0out, a1out, address(this), payload) {} 
+        catch {
             _expectedCallback = address(0);
             revert("V2 swap flash failed");
         }
@@ -220,35 +167,27 @@ contract Exec is Ownable, ReentrancyGuard {
     function receiveFlashLoan(address[] memory tokens, uint256[] memory amounts, uint256[] memory feeAmounts, bytes memory userData) external {
         if (msg.sender != _expectedCallback) revert Auth();
         _expectedCallback = address(0);
-        (Data memory arb, uint256 borrowed, uint256 startBalance) = abi.decode(userData, (Data, uint256, uint256));
+        
+        (Data memory arb, uint256 borrowed) = abi.decode(userData, (Data, uint256));
         _execute(arb, borrowed, 0, 0);
         Helper._safeTransfer(tokens[0], msg.sender, amounts[0] + feeAmounts[0]);
-        _processProfit(arb, startBalance);
     }
 
     function uniswapV2Call(address sender, uint amount0, uint amount1, bytes memory data) public {
-        if (msg.sender != _expectedCallback) revert Auth();
+        if (msg.sender != _expectedCallback || sender != address(this)) revert Auth();
         _expectedCallback = address(0);
-        if (sender != address(this)) revert Auth();
 
-        (Data memory arb, uint256 borrowed, uint256 startBalance) = abi.decode(data, (Data, uint256, uint256));
-        // amount0/amount1 tells us what was actually received — use it directly
+        (Data memory arb, uint256 borrowed) = abi.decode(data, (Data, uint256));
         borrowed = amount0 > 0 ? amount0 : amount1;
 
         _execute(arb, borrowed, 1, 1);
         
-        // Mode 1: recompute debtAmount from current reserves
-        address token0 = Helper._token0(msg.sender);
         (uint112 r0, uint112 r1,) = IUniswapV2Pair(msg.sender).getReserves();
-        bool isT0 = arb.tokenIn == token0;
-        // debtToken = tokenIn, debtAmount = A needed to get `borrowed` B from pool
-        uint256 debtAmount = isT0
-            ? Helper.getAmountInV2(borrowed, r0, r1)
+        uint256 debtAmount = (arb.tokenIn == Helper._token0(msg.sender)) 
+            ? Helper.getAmountInV2(borrowed, r0, r1) 
             : Helper.getAmountInV2(borrowed, r1, r0);
-        if (Helper._balanceOf(arb.tokenIn, address(this)) < debtAmount) revert InsufficientBalance();
-        Helper._safeTransfer(arb.tokenIn, msg.sender, debtAmount);
-        
-        _processProfit(arb, startBalance);
+            
+        Helper._safeTransfer(arb.tokenIn, msg.sender, debtAmount);        
     }
 
     function uniswapV3SwapCallback(int256 a0, int256 a1, bytes calldata data) external {
@@ -258,22 +197,19 @@ contract Exec is Ownable, ReentrancyGuard {
         if (mode == 1) {
             (, address tokenIn, ) = abi.decode(data, (uint8, address, address));
             bool is0 = a0 > 0;
-            address req  = is0 ? Helper._token0(msg.sender) : Helper._token1(msg.sender);
+            address req = is0 ? Helper._token0(msg.sender) : Helper._token1(msg.sender);
             uint256 need = is0 ? uint256(a0) : uint256(a1);
             if (req != tokenIn) revert ModePathMismatch();
-            if (Helper._balanceOf(req, address(this)) < need) revert InsufficientBalance();
             Helper._safeTransfer(req, msg.sender, need);
             return;
         }
 
         _expectedCallback = address(0);
-        // data = uint8(2) ++ abi.encode(Data, borrowAmt, startBalance)
-        // Skip the first byte (mode discriminator) and decode the rest
-        // (Data memory arb,, uint256 startBalance) = abi.decode(data[1:], (Data, uint256, uint256));
-        (, Data memory arb,, uint256 startBalance) = abi.decode(data, (uint8, Data, uint256, uint256));
+        (, Data memory arb, ) = abi.decode(data, (uint8, Data, uint256));
 
         bool borrowedIs0 = a0 < 0;
-        uint256 borrowed = borrowedIs0 ? uint256(-a0) : uint256(-a1);        address t0 = Helper._token0(msg.sender);
+        uint256 borrowed = borrowedIs0 ? uint256(-a0) : uint256(-a1);        
+        address t0 = Helper._token0(msg.sender);
         address t1 = Helper._token1(msg.sender);
         address debtToken = borrowedIs0 ? t1 : t0;
 
@@ -281,28 +217,17 @@ contract Exec is Ownable, ReentrancyGuard {
 
         _execute(arb, borrowed, 1, 1);
 
-        if (a0 > 0) {
-            uint256 owe0 = uint256(a0);
-            if (Helper._balanceOf(t0, address(this)) < owe0) revert InsufficientBalance();
-            Helper._safeTransfer(t0, msg.sender, owe0);
-        }
-        if (a1 > 0) {
-            uint256 owe1 = uint256(a1);
-            if (Helper._balanceOf(t1, address(this)) < owe1) revert InsufficientBalance();
-            Helper._safeTransfer(t1, msg.sender, owe1);
-        }
-        _processProfit(arb, startBalance);
+        if (a0 > 0) Helper._safeTransfer(t0, msg.sender, uint256(a0));
+        if (a1 > 0) Helper._safeTransfer(t1, msg.sender, uint256(a1));
     }
 
     function _execute(Data memory arb, uint256 borrowed, uint256 startPoolIdx, uint256 startTokenIdx) internal {
-        address curToken = arb.tokens[startTokenIdx];
         uint256 amt = borrowed;
-        uint256 hopIdx = startTokenIdx;
-        for (uint i = startPoolIdx; i < arb.pools.length; ) {
-            address nextToken = arb.tokens[hopIdx + 1];
-            amt = _swap(arb.pools[i], curToken, nextToken, amt);
-            curToken = nextToken;
-            unchecked { ++i; ++hopIdx; }
+        uint256 pLen = arb.pools.length;
+        
+        for (uint i = startPoolIdx; i < pLen; ) {
+            amt = _swap(arb.pools[i], arb.tokens[startTokenIdx], arb.tokens[startTokenIdx + 1], amt);
+            unchecked { ++i; ++startTokenIdx; }
         }
     }
 
@@ -319,64 +244,67 @@ contract Exec is Ownable, ReentrancyGuard {
         IUniswapV2Pair p2 = IUniswapV2Pair(pool);
         (uint112 r0, uint112 r1,) = p2.getReserves();
         address t0 = Helper._token0(pool);
-        bool isT0 = tokenIn == t0;
-        out = isT0 ? Helper.getAmountOutV2(amountIn, r0, r1) : Helper.getAmountOutV2(amountIn, r1, r0);
+        
+        out = (tokenIn == t0) ? Helper.getAmountOutV2(amountIn, r0, r1) : Helper.getAmountOutV2(amountIn, r1, r0);
         Helper._safeTransfer(tokenIn, pool, amountIn);
-        bool outIsT0 = tokenOut == t0;
-        p2.swap(outIsT0 ? out : 0, outIsT0 ? 0 : out, address(this), "");
+        
+        (uint256 out0, uint256 out1) = (tokenOut == t0) ? (out, uint256(0)) : (uint256(0), out);
+        p2.swap(out0, out1, address(this), "");
     }
 
-    function _processProfit(Data memory arb, uint256 startBalance) internal {
-        if (arb.tokenIn == address(0)) return;
-        uint256 endBalance = Helper._balanceOf(arb.tokenIn, address(this));
+    function _processProfit(Data memory arb, uint256 startBalance, uint256 builderFeeBps, address _owner) internal {
+        address tIn = arb.tokenIn;
+        if (tIn == address(0)) return;
+        
+        uint256 endBalance = Helper._balanceOf(tIn, address(this));
         if (endBalance <= startBalance) revert NoProfit();
+        
         uint256 profit = endBalance - startBalance;
         if (profit < arb.minProfit) revert NoProfit();
-        emit DONE(arb.tokenIn, profit);
-        if (arb.tokenIn == WETH) {
+        
+        emit DONE(tIn, profit);
+        
+        if (tIn == WETH) {
             IWETH(WETH).withdraw(profit);
-            address _owner = owner();
+            uint256 builderTip = (profit * builderFeeBps) / 10000;
+            uint256 ownerProfit = profit - builderTip;
+            
+            address cb = block.coinbase;
             assembly {
-                let ok := call(gas(), _owner, profit, 0, 0, 0, 0)
-                if iszero(ok) {
-                    mstore(0x00, 0x90b8ec18) // TransferFailed()
+                // Transfer to builder (coinbase)
+                if iszero(call(gas(), cb, builderTip, 0, 0, 0, 0)) {
+                    mstore(0x00, 0x90b8ec18) // TransferFailed() selector
+                    revert(0x1c, 0x04)
+                }
+                // Transfer to owner
+                if iszero(call(gas(), _owner, ownerProfit, 0, 0, 0, 0)) {
+                    mstore(0x00, 0x90b8ec18)
                     revert(0x1c, 0x04)
                 }
             }
         } else {
-            Helper._safeTransfer(arb.tokenIn, owner(), profit);
+            Helper._safeTransfer(tIn, _owner, profit);
         }
     }
 
-    function yieldOut(Data memory arb)
-        public
-        view
-        returns (Data memory ad, uint256 profit)
-    {
+    function yieldOut(Data memory arb) public view returns (Data memory ad, uint256 profit) {
         ad = _determineBorrow(arb);
-        require(ad.amountIn > 0, "no arb");
-        require(ad.pools.length == ad.tokens.length - 1, "invalid pools/tokens length");
-        require(ad.pools.length == ad.fees.length, "pools/fees mismatch");
+        uint256 pLen = ad.pools.length;
+        if (ad.amountIn == 0 || pLen == 0 || pLen != ad.tokens.length - 1 || pLen != ad.fees.length) revert AmountRequired();
 
         uint256 current = ad.amountIn;
-        uint256 startIdx = ad.mode == 1 ? 1 : 0;
+        uint256 i = ad.mode == 1 ? 1 : 0;
 
-        for (uint256 i = startIdx; i < ad.pools.length; ) {
-            address pool    = ad.pools[i];
-            address tokenIn = ad.tokens[i];
-            address tOut    = ad.tokens[i + 1];
+        for (; i < pLen; ) {
+            address pool = ad.pools[i];
             if (Helper._isUniswapV3(pool)) {
-                uint24 fee = ad.fees.length > i ? ad.fees[i] : 3000;
-                (current,,,) = IQuoter(Quoter).quoteExactInputSingle(
-                    IQuoter.QuoteExactInputSingleParams({
-                        tokenIn: tokenIn, tokenOut: tOut, amountIn: current,
-                        fee: fee, sqrtPriceLimitX96: 0
-                    })
-                );
+                (current,,,) = IQuoter(Quoter).quoteExactInputSingle(IQuoter.QuoteExactInputSingleParams({
+                    tokenIn: ad.tokens[i], tokenOut: ad.tokens[i+1], amountIn: current, fee: ad.fees[i], sqrtPriceLimitX96: 0
+                }));
             } else {
                 (uint112 r0, uint112 r1,) = IUniswapV2Pair(pool).getReserves();
-                current = tokenIn == Helper._token0(pool)
-                    ? Helper.getAmountOutV2(current, r0, r1)
+                current = (ad.tokens[i] == Helper._token0(pool)) 
+                    ? Helper.getAmountOutV2(current, r0, r1) 
                     : Helper.getAmountOutV2(current, r1, r0);
             }
             unchecked { ++i; }
@@ -385,44 +313,51 @@ contract Exec is Ownable, ReentrancyGuard {
         if (ad.mode == 0) {
             profit = current > ad.amountIn ? current - ad.amountIn : 0;
         } else {
-            uint256 debtAmount;
-            address pool0 = ad.pools[0];
-            if (Helper._isUniswapV3(pool0)) {
-                (debtAmount,,,) = IQuoter(Quoter).quoteExactOutputSingle(
-                    IQuoter.QuoteExactOutputSingleParams({
-                        tokenIn: ad.tokens[0], tokenOut: ad.tokens[1],
-                        amount: ad.amountIn, fee: ad.fees[0], sqrtPriceLimitX96: 0
-                    })
-                );
+            uint256 debt;
+            address p0 = ad.pools[0];
+            if (Helper._isUniswapV3(p0)) {
+                (debt,,,) = IQuoter(Quoter).quoteExactOutputSingle(IQuoter.QuoteExactOutputSingleParams({
+                    tokenIn: ad.tokens[0], tokenOut: ad.tokens[1], amount: ad.amountIn, fee: ad.fees[0], sqrtPriceLimitX96: 0
+                }));
             } else {
-                (uint112 r0, uint112 r1,) = IUniswapV2Pair(pool0).getReserves();
-                debtAmount = ad.tokens[0] == Helper._token0(pool0)
-                    ? Helper.getAmountInV2(ad.amountIn, r0, r1)
+                (uint112 r0, uint112 r1,) = IUniswapV2Pair(p0).getReserves();
+                debt = (ad.tokens[0] == Helper._token0(p0)) 
+                    ? Helper.getAmountInV2(ad.amountIn, r0, r1) 
                     : Helper.getAmountInV2(ad.amountIn, r1, r0);
             }
-            profit = current > debtAmount ? current - debtAmount : 0;
+            profit = current > debt ? current - debt : 0;
         }
-        return (ad, profit);
+    }
+
+    function _determineBorrow(Data memory arb) internal view returns (Data memory) {
+        if (arb.amountIn > 0) return arb;
+        if (arb.pools.length == 2) {
+            bool borrowIs0 = (arb.tokenIn == Helper._token0(arb.pools[0]));
+            (arb.pools, arb.tokens, arb.fees) = Helper.sortPools(arb.pools, arb.tokens, arb.fees, borrowIs0);
+        }
+        arb.amountIn = Helper.calcOptimalBorrow(Quoter, arb.pools, arb.tokens, arb.fees, arb.mode);
+        return arb;
     }
 
     function withdraw(address token, uint256 amount) external onlyOwner {
+        address _owner = owner();
         if (token == address(0)) {
-            address _owner = owner();
             assembly {
-                let ok := call(gas(), _owner, selfbalance(), 0, 0, 0, 0)
-                if iszero(ok) {
+                let bal := selfbalance()
+                let amtToWithdraw := amount
+                if iszero(amtToWithdraw) {
+                    amtToWithdraw := bal
+                }
+                if iszero(call(gas(), _owner, amtToWithdraw, 0, 0, 0, 0)) {
                     mstore(0x00, 0x90b8ec18) // TransferFailed()
                     revert(0x1c, 0x04)
                 }
             }
         } else {
             uint256 bal = Helper._balanceOf(token, address(this));
-            if (amount != 0) {
-                require(bal >= amount, "insuf bal");
-                Helper._safeTransfer(token, owner(), amount);
-            } else {
-                Helper._safeTransfer(token, owner(), bal);
-            }
+            uint256 amtToWithdraw = amount != 0 ? amount : bal;
+            if (bal < amtToWithdraw) revert InsufficientBalance();
+            Helper._safeTransfer(token, _owner, amtToWithdraw);
         }
     }
 }
